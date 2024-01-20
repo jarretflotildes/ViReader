@@ -16,27 +16,6 @@
 
 #include "display.h"
 
-//text settings
-typedef struct {
-    TTF_Font *font;
-    Uint8 fontSize;
-    SDL_Color fontColor;
-} text;
-
-//Screen
-typedef struct{
-   SDL_Renderer *renderer;
-   SDL_Texture  *text;
-   SDL_Surface  *surface;
-} screen;
-
-//Console
-typedef struct{
-   SDL_Surface *surfaceConsole;
-   SDL_Texture *textureMessage;
-   SDL_Rect consoleRect; //rect where text displayed
-} console; 
-
 int WindowWidth;
 int WindowHeight;
 SDL_Window *Window;
@@ -46,15 +25,10 @@ screen Screen;
 console Console;
 
 void initialize_display(){
-
     initialize_window();
-
     initialize_screen();
-
     initialize_text();
-
     initialize_console();
-
 }
 
 void initialize_window(){
@@ -79,6 +53,12 @@ void initialize_screen(){
     Screen.renderer = SDL_CreateRenderer(Window, 
                                              -1,
                                              SDL_RENDERER_ACCELERATED | SDL_RENDERER_PRESENTVSYNC); 
+    //Show 
+    SDL_RenderPresent(Screen.renderer);
+
+    //Draw Text
+    SDL_CreateTexture(Screen.renderer, SDL_PIXELFORMAT_RGBA8888, SDL_TEXTUREACCESS_STREAMING, 640, 480);
+
 }
 
 void initialize_text(){
@@ -113,45 +93,53 @@ void initialize_text(){
 }
 
 void initialize_console(){
-   Console.surfaceConsole = TTF_RenderText_Solid(Text.font, 
-                                                "put your text here", 
-                                                   Text.fontColor); 
-   Console.textureMessage = SDL_CreateTextureFromSurface(Screen.renderer, Console.surfaceConsole);
+   int console_width =  (int)(0.85 * WindowWidth);
+   int console_height = (int)(0.85 * WindowHeight);
 
-   Console.consoleRect.x = 0;  //controls the rect's x coordinate 
-   Console.consoleRect.y = 0; // controls the rect's y coordinte
-   Console.consoleRect.w = WindowWidth; // controls the width of the rect
-   Console.consoleRect.h = WindowHeight; // controls the height of the rect
+   // calculate the position of the top-left corner of the rectangle
+   int console_x = (int)((WindowWidth - console_width) / 2);
+   int console_y = (int)((WindowHeight - console_height) / 2);
 
-   SDL_RenderCopy(Screen.renderer, Console.textureMessage, NULL, &Console.consoleRect);
+   // set console location
+   Console.consoleRect.x = console_x;    Console.consoleRect.y = console_y;
+   Console.consoleRect.w = console_width; Console.consoleRect.h = console_height;
 }
 
-/*
- * Main loop of program
- */
-void display_driver(){
-   SDL_Event winEvent;
-   bool running = true;
+void update_screen(){
 
-  //Show 
+   //Clear Screen
+   SDL_RenderClear(Screen.renderer);
+   //Console
+   SDL_SetRenderDrawColor(Screen.renderer, 30, 30, 30, 140);
+   SDL_RenderFillRect(Screen.renderer, &Console.consoleRect); 
+   //Text
+   SDL_RenderCopy(Screen.renderer,Screen.text,NULL,&Console.consoleRect);
+   //Show
    SDL_RenderPresent(Screen.renderer);
+}
 
-    //Draw Text
-   SDL_CreateTexture(Screen.renderer, SDL_PIXELFORMAT_RGBA8888, SDL_TEXTUREACCESS_STREAMING, 640, 480);
-   //Main Driver
-   while (running){
+int getWindowWidth(){
+   return WindowWidth;
+}
 
-        while(SDL_PollEvent(&winEvent) == 0){
-             if(winEvent.type == SDL_QUIT){
-                   running = false;
-                   break;
-             }
-    	}
+int getWindowHeight(){
+   return WindowHeight;
+}
 
-        SDL_RenderPresent(Screen.renderer);
+SDL_Window *getWindow(){
+   return Window;
+}
 
-    }
+text getText(){
+   return Text;
+}
 
+screen getScreen(){
+   return Screen;
+}
+
+console getConsole(){
+   return Console;
 }
 
 void display_shutdown(){

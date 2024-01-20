@@ -3,6 +3,7 @@
 
 #include "parse.h"
 #include "display.h"
+#include "engine.h"
 
 #include <SDL2/SDL.h>
 
@@ -23,7 +24,7 @@ int main(int args, char *argv[]){
     printf("\nFinished,,, exiting\n");
 */
     initialize_display();
-    display_driver();
+    engine_driver();
     display_shutdown();
 
     return EXIT_SUCCESS;
