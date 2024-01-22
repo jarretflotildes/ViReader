@@ -118,27 +118,27 @@ void update_screen(){
    SDL_RenderPresent(Screen.renderer);
 }
 
-int getWindowWidth(){
+int display_getWindowWidth(){
    return WindowWidth;
 }
 
-int getWindowHeight(){
+int display_getWindowHeight(){
    return WindowHeight;
 }
 
-SDL_Window *getWindow(){
+SDL_Window *display_getWindow(){
    return Window;
 }
 
-text getText(){
+text display_getText(){
    return Text;
 }
 
-screen getScreen(){
+screen display_getScreen(){
    return Screen;
 }
 
-console getConsole(){
+console display_getConsole(){
    return Console;
 }
 

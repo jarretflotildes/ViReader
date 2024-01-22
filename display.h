@@ -38,12 +38,12 @@ void update_screen();
 void update_console();
 
 //getters
-int getWindowWidth();
-int getWindowHeight();
-SDL_Window *getWindow();
-text getText();
-screen getScreen();
-console getConsole();
+int display_getWindowWidth();
+int display_getWindowHeight();
+SDL_Window *display_getWindow();
+text display_getText();
+screen display_getScreen();
+console display_getConsole();
 
 void display_shutdown();
 
