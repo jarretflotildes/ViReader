@@ -14,12 +14,9 @@
 int main(int args, char *argv[]){
 
     initialize_parse(argv[1]);
-for(int i = 0;i<4;i++){
-//for(int i = 0;i<parse_getNumLines();i++){
-string line = parse_getPrevious() + parse_getTxt()->at(i);
-line = parse_CutLine(line);
+for(int i = 0;i<3;i++){
+string line = parse_CutLine(i);
 std::cout << line << std::endl;
-//std::cout << "Previous:" << parse_getPrevious() << std::endl;
 }
 //    initialize_display();
 //    initialize_controls();

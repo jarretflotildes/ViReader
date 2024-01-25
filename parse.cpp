@@ -14,7 +14,7 @@ using std::endl;
 using std::string;
 using std::vector;
 
-int Line_limit = 30;
+int Line_limit = 63;
 
 string Previous;
 vector<string> TXT_FILE[1];
@@ -26,8 +26,6 @@ void initialize_parse(char *fName){
     extract_text(fName);
     Previous = "";
 }
-
-
 
 void extract_text(char *fName){
    std::ifstream file(fName);
@@ -51,10 +49,11 @@ void extract_text(char *fName){
 
 /*
     Cut String into proper format
-    store excess into previous
 */
-string parse_CutLine(string line){
+string parse_CutLine(int i){
 
+   string line = parse_getTxt()->at(i);
+   
    if((int)line.length() >= Line_limit){
       string firstHalf = line.substr(0,Line_limit);
       string secondHalf = line.substr(Line_limit,line.length());
@@ -70,8 +69,6 @@ string parse_CutLine(string line){
 
       line = firstHalf;
 
-      //cout << line << endl;
-      
       //word is split from line limit, move word to next line
       if(firstHalf_lastCharacter != ' ' && 
          secondHalf_firstCharacter != ' '){
@@ -79,16 +76,23 @@ string parse_CutLine(string line){
                (secondHalf.back() == '\n' || secondHalf.back() == ' ')) {
                secondHalf.pop_back();
             }
-            Previous = firstHalf_lastWord + secondHalf;
-            //cout << Previous << endl;
       }
 
-   } else {
-      Previous = "";
+      //strip /n
+      secondHalf.erase(secondHalf.length()-1);
+
+      string newLine = firstHalf_lastWord + secondHalf + " " + TXT_FILE->at(i+1);
+//cout << "NEW" << endl;   
+//cout << newLine << endl;
+      TXT_FILE->at(i+1) = newLine;
+
+      //cout << firstHalf_lastWord << secondHalf << endl;
+      
    }
+//cout << "OUTPUT:" << endl;
+//cout << TXT_FILE->at(i+1) << endl;
 
    return line;
-
 }
 
 string getLastWord(string line){
@@ -97,7 +101,7 @@ string getLastWord(string line){
    if (pos == 0) { /* string consists entirely of spaces */ 
       line = " "; 
    } else {
-      line = line.substr(line.find_last_of(' ', pos));
+      line = line.substr(line.find_last_of(' ', pos)+1);
    }
    return line;   
 }

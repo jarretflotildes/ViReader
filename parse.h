@@ -11,7 +11,7 @@ void initialize_parse(char *fName);
 void extract_text(char *fName);
 void parse_shutdown();
 
-string parse_CutLine(string line);
+string parse_CutLine(int i);
 
 string getLastWord(string line);
 
