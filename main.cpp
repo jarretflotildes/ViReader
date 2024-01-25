@@ -1,33 +1,34 @@
 #include <stdio.h>
 #include <stdlib.h>
+#include <iostream>
 
 #include "parse.h"
 #include "display.h"
 #include "engine.h"
 #include "controls.h"
 
+#include <string>
+
 #include <SDL2/SDL.h>
 
-#define MAXROWS 5000
-
 int main(int args, char *argv[]){
-   /* 
-    char *fName=argv[1];   
-    char *text[MAXROWS];
-    int rows = 0;
-    int cols = 0;
 
-    printf("Opening file %s...\n",fName);
+    initialize_parse(argv[1]);
+for(int i = 0;i<4;i++){
+//for(int i = 0;i<parse_getNumLines();i++){
+string line = parse_getPrevious() + parse_getTxt()->at(i);
+line = parse_CutLine(line);
+std::cout << line << std::endl;
+//std::cout << "Previous:" << parse_getPrevious() << std::endl;
+}
+//    initialize_display();
+//    initialize_controls();
 
-    extract_text(fName,text,&rows,&cols);
-    closeText(text,&rows);
+//    engine_driver();
 
-    printf("\nFinished,,, exiting\n");
-*/
-    initialize_display();
-    initialize_controls();
-    engine_driver();
-    display_shutdown();
+//    controls_shutdown();
+//    display_shutdown();
+//    parse_shutdown();
 
     return EXIT_SUCCESS;
 

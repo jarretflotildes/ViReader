@@ -40,6 +40,12 @@ void initialize_controls(){
 
 }
 
+void controls_shutdown(){
+    for(int i = 0;i<4;i++){
+        SDL_FreeSurface(Surfaces[i]);
+    }
+}
+
 void controls_spacebar(console Console, screen Screen){
     Current_surface++;
 	if(Current_surface >= 4){
