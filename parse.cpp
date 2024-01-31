@@ -62,47 +62,16 @@ string parse_CutLine(int i){
 
       //If Last word is less than character limit should move it to next line
       if((int)firstHalf_lastWord.length() < Line_limit){
+         line = cutLine_Case1(line,firstHalf,secondHalf,firstHalf_lastWord, i);
+      }
 
-         char firstHalf_lastCharacter   = firstHalf_lastWord.at(firstHalf_lastWord.length()-1);
-         char secondHalf_firstCharacter = secondHalf.at(0);
-
-         while(firstHalf.at(firstHalf.length()-1) != ' '){
-            firstHalf.pop_back();
-         }
-
-         line = firstHalf;
-
-         //word is split from line limit, move word to next line
-         if(firstHalf_lastCharacter != ' ' && 
-            secondHalf_firstCharacter != ' '){
-               if (!secondHalf.empty() && 
-                  (secondHalf.back() == '\n' || secondHalf.back() == ' ')) {
-                  secondHalf.pop_back();
-               }
-         }
-
-         //      
-
-         //strip /n
-         secondHalf.erase(secondHalf.length()-1);
-
-         if(i+1 < Num_Lines){
-            string newLine = firstHalf_lastWord + secondHalf + " " + TXT_FILE->at(i+1);
-            TXT_FILE->at(i+1) = newLine;
-         } else {
-            string newLine = firstHalf_lastWord + secondHalf;
-            TXT_FILE->push_back(newLine);
-            Num_Lines++;
-         }
-      } else {
+/*else {
          //If last word is actually larger than character limit
          //should add hypen (-) end of line than continue it on next line 
          char firstHalf_lastCharacter   = firstHalf_lastWord.at(firstHalf_lastWord.length()-1);
          char secondHalf_firstCharacter = secondHalf.at(0);
 
-         while(firstHalf.at(firstHalf.length()-1) != ' '){
-            firstHalf.pop_back();
-         }
+    
 
          line = firstHalf;
 
@@ -130,10 +99,53 @@ string parse_CutLine(int i){
          }
 
 
+      }*/
+   }
+
+   return line;
+}
+
+string cutLine_Case1(string line, string firstHalf, string secondHalf, string firstHalf_lastWord,int i){
+
+   char firstHalf_lastCharacter = firstHalf_lastWord.at(firstHalf_lastWord.length()-1);
+   
+   //No need to do anything else if second half is empty
+   if(secondHalf.empty() == true){
+      return firstHalf;
+   } 
+
+   //remove leftovers of last word
+   while(firstHalf.at(firstHalf.length()-1) != ' '){
+      firstHalf.pop_back();
+   }
+
+   line = firstHalf;
+
+   char secondHalf_firstCharacter = secondHalf.at(0);
+
+   //word is split from line limit, move word to next line
+   if(firstHalf_lastCharacter != ' ' && 
+   secondHalf_firstCharacter != ' '){
+      if (!secondHalf.empty() && 
+         (secondHalf.back() == '\n' || secondHalf.back() == ' ')) {
+         secondHalf.pop_back();
       }
    }
-//cout << "OUTPUT:" << endl;
-//cout << TXT_FILE->at(i+1) << endl;
+
+   //remove any special characters at end of string
+   if(secondHalf.at(secondHalf.length()-1) == '\n' || secondHalf.at(secondHalf.length()-1) == '\r'){ 
+      //cout << "removing " << int(secondHalf.at(secondHalf.length()-1)) << endl;;
+      secondHalf.erase(secondHalf.length()-1);
+   }
+
+   if(i+1 < Num_Lines){
+      string newLine = firstHalf_lastWord + secondHalf + " " + TXT_FILE->at(i+1);
+      TXT_FILE->at(i+1) = newLine;
+   } else {
+      string newLine = firstHalf_lastWord + secondHalf;
+      TXT_FILE->push_back(newLine);
+      Num_Lines++;
+   }
 
    return line;
 }
@@ -142,6 +154,7 @@ string parse_CutLine(int i){
 string getLastWord(string line){
    int pos = line.size();
    while (line[pos] == ' ' && pos > 0) --pos;
+
    if (pos == 0) { /* string consists entirely of spaces */ 
       line = " "; 
    } else {

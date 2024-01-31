@@ -23,7 +23,7 @@ int main(int args, char *argv[]){
         initialize_parse(argv[1]);
 for(int i = 0;i<parse_getNumLines();i++){
 string line = parse_CutLine(i);
-std::cout << line << std::endl;
+std::cout << "PRINTING: " << line << std::endl;
 }
 //    initialize_display();
 //    initialize_controls();
