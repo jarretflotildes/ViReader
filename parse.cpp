@@ -52,42 +52,85 @@ void extract_text(char *fName){
 */
 string parse_CutLine(int i){
 
-   string line = parse_getTxt()->at(i);
-   
+   string line = TXT_FILE->at(i);
+
    if((int)line.length() >= Line_limit){
       string firstHalf = line.substr(0,Line_limit);
       string secondHalf = line.substr(Line_limit,line.length());
 
       string firstHalf_lastWord  = getLastWord(firstHalf);
 
-      char firstHalf_lastCharacter   = firstHalf_lastWord.at(firstHalf_lastWord.length()-1);
-      char secondHalf_firstCharacter = secondHalf.at(0);
+      //If Last word is less than character limit should move it to next line
+      if((int)firstHalf_lastWord.length() < Line_limit){
 
-      while(firstHalf.at(firstHalf.length()-1) != ' '){
-         firstHalf.pop_back();
+         char firstHalf_lastCharacter   = firstHalf_lastWord.at(firstHalf_lastWord.length()-1);
+         char secondHalf_firstCharacter = secondHalf.at(0);
+
+         while(firstHalf.at(firstHalf.length()-1) != ' '){
+            firstHalf.pop_back();
+         }
+
+         line = firstHalf;
+
+         //word is split from line limit, move word to next line
+         if(firstHalf_lastCharacter != ' ' && 
+            secondHalf_firstCharacter != ' '){
+               if (!secondHalf.empty() && 
+                  (secondHalf.back() == '\n' || secondHalf.back() == ' ')) {
+                  secondHalf.pop_back();
+               }
+         }
+
+         //      
+
+         //strip /n
+         secondHalf.erase(secondHalf.length()-1);
+
+         if(i+1 < Num_Lines){
+            string newLine = firstHalf_lastWord + secondHalf + " " + TXT_FILE->at(i+1);
+            TXT_FILE->at(i+1) = newLine;
+         } else {
+            string newLine = firstHalf_lastWord + secondHalf;
+            TXT_FILE->push_back(newLine);
+            Num_Lines++;
+         }
+      } else {
+         //If last word is actually larger than character limit
+         //should add hypen (-) end of line than continue it on next line 
+         char firstHalf_lastCharacter   = firstHalf_lastWord.at(firstHalf_lastWord.length()-1);
+         char secondHalf_firstCharacter = secondHalf.at(0);
+
+         while(firstHalf.at(firstHalf.length()-1) != ' '){
+            firstHalf.pop_back();
+         }
+
+         line = firstHalf;
+
+         //word is split from line limit, move word to next line
+         if(firstHalf_lastCharacter != ' ' && 
+            secondHalf_firstCharacter != ' '){
+               if (!secondHalf.empty() && 
+                  (secondHalf.back() == '\n' || secondHalf.back() == ' ')) {
+                  secondHalf.pop_back();
+               }
+         }
+
+         //      
+
+         //strip /n
+         secondHalf.erase(secondHalf.length()-1);
+
+         if(i+1 < Num_Lines){
+            string newLine = firstHalf_lastWord + secondHalf + " " + TXT_FILE->at(i+1);
+            TXT_FILE->at(i+1) = newLine;
+         } else {
+            string newLine = firstHalf_lastWord + secondHalf;
+            TXT_FILE->push_back(newLine);
+            Num_Lines++;
+         }
+
+
       }
-
-      line = firstHalf;
-
-      //word is split from line limit, move word to next line
-      if(firstHalf_lastCharacter != ' ' && 
-         secondHalf_firstCharacter != ' '){
-            if (!secondHalf.empty() && 
-               (secondHalf.back() == '\n' || secondHalf.back() == ' ')) {
-               secondHalf.pop_back();
-            }
-      }
-
-      //strip /n
-      secondHalf.erase(secondHalf.length()-1);
-
-      string newLine = firstHalf_lastWord + secondHalf + " " + TXT_FILE->at(i+1);
-//cout << "NEW" << endl;   
-//cout << newLine << endl;
-      TXT_FILE->at(i+1) = newLine;
-
-      //cout << firstHalf_lastWord << secondHalf << endl;
-      
    }
 //cout << "OUTPUT:" << endl;
 //cout << TXT_FILE->at(i+1) << endl;
@@ -95,14 +138,20 @@ string parse_CutLine(int i){
    return line;
 }
 
+//get last word in a string
 string getLastWord(string line){
    int pos = line.size();
    while (line[pos] == ' ' && pos > 0) --pos;
    if (pos == 0) { /* string consists entirely of spaces */ 
       line = " "; 
    } else {
-      line = line.substr(line.find_last_of(' ', pos)+1);
+      line = line.substr(line.find_last_of(' ', pos));
    }
+
+   if(line.at(0) == ' '){
+      line.erase(line.begin());
+   }
+
    return line;   
 }
 
