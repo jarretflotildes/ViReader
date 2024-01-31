@@ -13,6 +13,7 @@ void parse_shutdown();
 
 string parse_CutLine(int i);
 string cutLine_Case1(string line,string firstHalf, string secondHalf, string firstHalf_lastWord ,int i);
+string cutLine_Case2(string line,string firstHalf, string secondHalf, string firstHalf_lastWord ,int i);
 
 string getLastWord(string line);
 

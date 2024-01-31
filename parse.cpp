@@ -32,7 +32,6 @@ void extract_text(char *fName){
    string line = "";
 
    if(file.is_open()){
-
       int i = 0;
       while (getline(file, line)) {
          TXT_FILE->push_back(line);
@@ -48,7 +47,12 @@ void extract_text(char *fName){
 }
 
 /*
-    Cut String into proper format
+   Cut current string from table into proper format to display on screen
+   Limit current string to up to character limit
+      3 cases 
+      1) Last word in first half < character limit
+      2) Last word in first half >= character limit 
+      3) String is already fine
 */
 string parse_CutLine(int i){
 
@@ -60,54 +64,25 @@ string parse_CutLine(int i){
 
       string firstHalf_lastWord  = getLastWord(firstHalf);
 
-      //If Last word is less than character limit should move it to next line
       if((int)firstHalf_lastWord.length() < Line_limit){
-         line = cutLine_Case1(line,firstHalf,secondHalf,firstHalf_lastWord, i);
+         line = cutLine_Case1(line,firstHalf,secondHalf,firstHalf_lastWord,i);
+      } else {
+         line = cutLine_Case2(line,firstHalf,secondHalf,firstHalf_lastWord,i);
       }
-
-/*else {
-         //If last word is actually larger than character limit
-         //should add hypen (-) end of line than continue it on next line 
-         char firstHalf_lastCharacter   = firstHalf_lastWord.at(firstHalf_lastWord.length()-1);
-         char secondHalf_firstCharacter = secondHalf.at(0);
-
-    
-
-         line = firstHalf;
-
-         //word is split from line limit, move word to next line
-         if(firstHalf_lastCharacter != ' ' && 
-            secondHalf_firstCharacter != ' '){
-               if (!secondHalf.empty() && 
-                  (secondHalf.back() == '\n' || secondHalf.back() == ' ')) {
-                  secondHalf.pop_back();
-               }
-         }
-
-         //      
-
-         //strip /n
-         secondHalf.erase(secondHalf.length()-1);
-
-         if(i+1 < Num_Lines){
-            string newLine = firstHalf_lastWord + secondHalf + " " + TXT_FILE->at(i+1);
-            TXT_FILE->at(i+1) = newLine;
-         } else {
-            string newLine = firstHalf_lastWord + secondHalf;
-            TXT_FILE->push_back(newLine);
-            Num_Lines++;
-         }
-
-
-      }*/
    }
 
    return line;
 }
 
+/*
+   Last word in first half < character limit
+      - does nothing if secondhalf is empty
+      - Removes any leftover letters from first half 
+      - Returns formatted firsthalf while updating/adding next value in table
+*/
 string cutLine_Case1(string line, string firstHalf, string secondHalf, string firstHalf_lastWord,int i){
 
-   char firstHalf_lastCharacter = firstHalf_lastWord.at(firstHalf_lastWord.length()-1);
+   char firstHalf_lastCharacter = firstHalf_lastWord.back();
    
    //No need to do anything else if second half is empty
    if(secondHalf.empty() == true){
@@ -115,7 +90,7 @@ string cutLine_Case1(string line, string firstHalf, string secondHalf, string fi
    } 
 
    //remove leftovers of last word
-   while(firstHalf.at(firstHalf.length()-1) != ' '){
+   while(firstHalf.back() != ' '){
       firstHalf.pop_back();
    }
 
@@ -126,28 +101,54 @@ string cutLine_Case1(string line, string firstHalf, string secondHalf, string fi
    //word is split from line limit, move word to next line
    if(firstHalf_lastCharacter != ' ' && 
    secondHalf_firstCharacter != ' '){
-      if (!secondHalf.empty() && 
-         (secondHalf.back() == '\n' || secondHalf.back() == ' ')) {
+      if ((secondHalf.back() == '\n' || secondHalf.back() == ' ') || secondHalf.back() == '\r') {
          secondHalf.pop_back();
       }
    }
 
    //remove any special characters at end of string
-   if(secondHalf.at(secondHalf.length()-1) == '\n' || secondHalf.at(secondHalf.length()-1) == '\r'){ 
+   if(secondHalf.back() == '\n' || secondHalf.back() == '\r'){ 
       //cout << "removing " << int(secondHalf.at(secondHalf.length()-1)) << endl;;
       secondHalf.erase(secondHalf.length()-1);
    }
 
    if(i+1 < Num_Lines){
-      string newLine = firstHalf_lastWord + secondHalf + " " + TXT_FILE->at(i+1);
-      TXT_FILE->at(i+1) = newLine;
+      string next = TXT_FILE->at(i+1);
+      char nextCharacter = next.at(0);
+
+      //Append to next line ONLY when next line is not new paragraph/dialogue/whatever
+      if(nextCharacter != '\r' && //enter
+         nextCharacter != '\n' && //new line 
+         nextCharacter != '\v') { //vertical tab
+//            cout << int(TXT_FILE->at(i+1).at(0)) << endl;
+            string newLine = firstHalf_lastWord + secondHalf + " " + TXT_FILE->at(i+1);
+            TXT_FILE->at(i+1) = newLine;
+
+         } else{
+            string newLine = firstHalf_lastWord + secondHalf;
+            TXT_FILE->insert(TXT_FILE->begin()+i+1,newLine);
+            Num_Lines++;   //Update GLOBAL SIZE 
+      }
    } else {
       string newLine = firstHalf_lastWord + secondHalf;
       TXT_FILE->push_back(newLine);
-      Num_Lines++;
+      Num_Lines++;         //UPDATE GLOBAL SIZE
    }
 
+   TXT_FILE->at(i) = line; //UPDATE GLOBAL TEXT TABLE
+
    return line;
+}
+
+/*
+   Last word in first half > character limit
+      - should add hypen (-) to end of first half
+      - continue it on next line with whatever else is with it on next line as well
+      - RETURN formatted first half and updated/added next 
+*/
+string cutLine_Case2(string line, string firstHalf, string secondHalf, string firstHalf_lastWord,int i){
+
+      return line;
 }
 
 //get last word in a string
