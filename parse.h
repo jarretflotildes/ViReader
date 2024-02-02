@@ -12,15 +12,14 @@ void extract_text(char *fName);
 void parse_shutdown();
 
 string parse_CutLine(int i);
-string cutLine_Case1(string line,string firstHalf, string secondHalf, string firstHalf_lastWord ,int i);
-string cutLine_Case2(string line,string firstHalf, string secondHalf, string firstHalf_lastWord ,int i);
+string cutLine_Case1(string firstHalf, string secondHalf, string firstHalf_lastWord ,int i);
+string cutLine_Case2(string firstHalf, string secondHalf, string firstHalf_lastWord ,int i);
 
 string getLastWord(string line);
 
 int parse_getNumLines();
-vector<string> *parse_getTxt();
+vector<string> parse_getText();
 bool containSpace(string line);
-string parse_getPrevious();
 
 void print_file();
 

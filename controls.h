@@ -9,6 +9,6 @@ void controls_shutdown();
 
 void controls_spacebar(console Console, screen Screen);
 
-
+void incrementCurrentText();
 
 #endif

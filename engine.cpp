@@ -24,7 +24,6 @@ void engine_driver(){
    bool running = true;
    console Console = display_getConsole();
    screen Screen = display_getScreen();
-
    //Main Driver
    while (running){
       while(SDL_PollEvent(&winEvent)){

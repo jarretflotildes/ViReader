@@ -1,6 +1,8 @@
 #include <stdio.h>
 #include <stdbool.h>
 #include <iostream>
+#include <cstring>
+#include <vector>
 
 //initializing and shutdown functions
 #include <SDL2/SDL.h>
@@ -16,49 +18,65 @@
 
 #include "display.h"
 #include "controls.h"
+#include "parse.h"
 
-//TEMP STUFF
-int Current_surface;
+using std::vector;
+using std::cout;
+using std::endl;
 
-SDL_Surface *Surfaces[3];
+int CURRENT_TEXT;
+
+vector<SDL_Surface*> Surfaces;
 
 void initialize_controls(){
-//TEMPORARY
-    console Console = display_getConsole();
+
     text Text = display_getText();
 
-    Current_surface = 0;
-   const char* text[] = {"\"...\"","...That's right.","This text display kinda works","If what this says is true then... that means..!"};
+    for(int i = 0;i<parse_getNumLines();i++){
+       string line = parse_getText().at(i);
+       SDL_Surface *currentSurface = TTF_RenderText_Solid(Text.font,line.c_str(),(SDL_Color){0,0,0});
+       Surfaces.push_back(currentSurface);
+    }
 
-   for(int i = 0;i<4;i++){
-      Surfaces[i] = TTF_RenderText_Solid(Text.font,text[i],(SDL_Color){0,0,0});
-   }
-
-   Console.consoleRect = {Console.consoleRect.x + 10,
-               Console.consoleRect.y,Surfaces[0]->w,
-               Surfaces[0]->h};
-
+    CURRENT_TEXT = 0;
+    
 }
 
 void controls_shutdown(){
-    for(int i = 0;i<4;i++){
-        SDL_FreeSurface(Surfaces[i]);
+    for(int i = 0;i<parse_getNumLines();i++){
+        SDL_FreeSurface(Surfaces.at(i));
     }
 }
 
 void controls_spacebar(console Console, screen Screen){
-    Current_surface++;
-	if(Current_surface >= 4){
-	    Current_surface = 0;	  
-	}
 
-	Console.consoleRect.w = Surfaces[Current_surface]->w;
-	Console.consoleRect.h = Surfaces[Current_surface]->h;
 	SDL_DestroyTexture(Screen.text);
-	Screen.text = SDL_CreateTextureFromSurface(Screen.renderer,Surfaces[Current_surface]);
+    incrementCurrentText();
+   
+    int heightOffset = 0;
+SDL_RenderClear(Screen.renderer);
+    for(int i = 0;i<2;i++){
+
+    Console.consoleRect.w = Surfaces.at(CURRENT_TEXT)->w;
+    Console.consoleRect.h = Surfaces.at(CURRENT_TEXT)->h + heightOffset;
+
+  	Screen.text = SDL_CreateTextureFromSurface(Screen.renderer,Surfaces.at(CURRENT_TEXT));
     update_screen();
+SDL_RenderClear(Screen.renderer);
     SDL_RenderCopy(Screen.renderer,Screen.text,NULL,&Console.consoleRect);
     //Show
     SDL_RenderPresent(Screen.renderer);
+
+    incrementCurrentText();
+    heightOffset += 50;
+
+    }
+}
+
+void incrementCurrentText(){
+    CURRENT_TEXT++;
+    if(CURRENT_TEXT > parse_getNumLines()){
+        CURRENT_TEXT = 0;
+    }
 }
 

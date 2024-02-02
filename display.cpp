@@ -42,6 +42,7 @@ void initialize_window(){
                               WindowWidth,
                               WindowHeight,
                               SDL_WINDOW_ALLOW_HIGHDPI);
+
     if(Window == NULL){
         std::cout << "Could not create window!" << SDL_GetError() << std::endl;
         exit(1);
@@ -108,7 +109,7 @@ void initialize_console(){
 void update_screen(){
 
    //Clear Screen
-   SDL_RenderClear(Screen.renderer);
+//   SDL_RenderClear(Screen.renderer);
    //Console
    SDL_SetRenderDrawColor(Screen.renderer, 30, 30, 30, 140);
    SDL_RenderFillRect(Screen.renderer, &Console.consoleRect); 
