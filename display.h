@@ -5,6 +5,8 @@
 #include <SDL2/SDL.h>
 #include <SDL_ttf.h>
 
+#include "window.h"
+
 //text settings
 typedef struct {
     TTF_Font *font;
@@ -38,9 +40,7 @@ void update_screen();
 void update_console();
 
 //getters
-int display_getWindowWidth();
-int display_getWindowHeight();
-SDL_Window *display_getWindow();
+Window display_getWindow();
 text display_getText();
 screen display_getScreen();
 console display_getConsole();

@@ -28,6 +28,10 @@ int CURRENT_TEXT;
 
 vector<SDL_Surface*> Surfaces;
 
+vector<SDL_Surface*> getSurfaces(){
+    return Surfaces;
+}
+
 void initialize_controls(){
 
     text Text = display_getText();
@@ -49,13 +53,11 @@ void controls_shutdown(){
 }
 
 void controls_spacebar(console Console, screen Screen){
-
 	SDL_DestroyTexture(Screen.text);
     incrementCurrentText();
    
     int heightOffset = 0;
 SDL_RenderClear(Screen.renderer);
-    for(int i = 0;i<2;i++){
 
     Console.consoleRect.w = Surfaces.at(CURRENT_TEXT)->w;
     Console.consoleRect.h = Surfaces.at(CURRENT_TEXT)->h + heightOffset;
@@ -67,15 +69,11 @@ SDL_RenderClear(Screen.renderer);
     //Show
     SDL_RenderPresent(Screen.renderer);
 
-    incrementCurrentText();
-    heightOffset += 50;
-
-    }
 }
 
 void incrementCurrentText(){
     CURRENT_TEXT++;
-    if(CURRENT_TEXT > parse_getNumLines()){
+    if(CURRENT_TEXT >= parse_getNumLines()){
         CURRENT_TEXT = 0;
     }
 }

@@ -15,10 +15,9 @@
 #include <SDL_ttf.h>
 
 #include "display.h"
+#include "window.h"
 
-int WindowWidth;
-int WindowHeight;
-SDL_Window *Window;
+Window gWindow;
 
 text Text;
 screen Screen;
@@ -32,26 +31,12 @@ void initialize_display(){
 }
 
 void initialize_window(){
-    WindowWidth = 1200;
-    WindowHeight = 800;
-
-    SDL_Init(SDL_INIT_EVERYTHING);
-    Window = SDL_CreateWindow("ViReader",
-                              SDL_WINDOWPOS_UNDEFINED,
-                              SDL_WINDOWPOS_UNDEFINED,
-                              WindowWidth,
-                              WindowHeight,
-                              SDL_WINDOW_ALLOW_HIGHDPI);
-
-    if(Window == NULL){
-        std::cout << "Could not create window!" << SDL_GetError() << std::endl;
-        exit(1);
-    }
+   gWindow = Window();
 }
 
 void initialize_screen(){
     //Graphics card does rendering
-    Screen.renderer = SDL_CreateRenderer(Window, 
+    Screen.renderer = SDL_CreateRenderer(gWindow.window, 
                                              -1,
                                              SDL_RENDERER_ACCELERATED | SDL_RENDERER_PRESENTVSYNC); 
     //Show 
@@ -69,6 +54,7 @@ void initialize_text(){
    Text.fontColor.r = 255; 
    Text.fontColor.g = 255; 
    Text.fontColor.b = 255;
+
    //TODO Adjust fontsize based on screen resolution
    Text.fontSize = 72;
 
@@ -94,12 +80,15 @@ void initialize_text(){
 }
 
 void initialize_console(){
-   int console_width =  (int)(0.85 * WindowWidth);
-   int console_height = (int)(0.85 * WindowHeight);
+   int width = gWindow.getWidth();
+   int height = gWindow.getHeight();
+
+   int console_width =  (int)(0.85 * width);
+   int console_height = (int)(0.85 * height);
 
    // calculate the position of the top-left corner of the rectangle
-   int console_x = (int)((WindowWidth - console_width) / 2);
-   int console_y = (int)((WindowHeight - console_height) / 2);
+   int console_x = (int)((width - console_width) / 2);
+   int console_y = (int)((height - console_height) / 2);
 
    // set console location
    Console.consoleRect.x = console_x;    Console.consoleRect.y = console_y;
@@ -107,9 +96,8 @@ void initialize_console(){
 }
 
 void update_screen(){
-
    //Clear Screen
-//   SDL_RenderClear(Screen.renderer);
+   SDL_RenderClear(Screen.renderer);
    //Console
    SDL_SetRenderDrawColor(Screen.renderer, 30, 30, 30, 140);
    SDL_RenderFillRect(Screen.renderer, &Console.consoleRect); 
@@ -119,16 +107,8 @@ void update_screen(){
    SDL_RenderPresent(Screen.renderer);
 }
 
-int display_getWindowWidth(){
-   return WindowWidth;
-}
-
-int display_getWindowHeight(){
-   return WindowHeight;
-}
-
-SDL_Window *display_getWindow(){
-   return Window;
+Window display_getWindow(){
+   return gWindow;
 }
 
 text display_getText(){
@@ -151,7 +131,7 @@ void display_shutdown(){
    SDL_DestroyRenderer(Screen.renderer);
 
    //Window
-   SDL_DestroyWindow(Window);
+   gWindow.shutdown_Window();
 
    //Console
    SDL_FreeSurface(Console.surfaceConsole);

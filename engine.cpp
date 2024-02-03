@@ -24,6 +24,7 @@ void engine_driver(){
    bool running = true;
    console Console = display_getConsole();
    screen Screen = display_getScreen();
+
    //Main Driver
    while (running){
       while(SDL_PollEvent(&winEvent)){
@@ -34,6 +35,7 @@ void engine_driver(){
                   switch(winEvent.key.keysym.sym){
 	                  case SDLK_SPACE:
                         controls_spacebar(Console,Screen);
+//SDL_RenderCopy(Screen.renderer, Message, NULL, &Message_rect);
                    		break;
                      default:
 		                  break;
@@ -41,4 +43,5 @@ void engine_driver(){
          }
       }
    }
+   
 }
