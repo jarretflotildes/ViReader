@@ -23,6 +23,9 @@ text Text;
 screen Screen;
 console Console;
 
+using std::cout;
+using std::endl;
+
 void initialize_display(){
     initialize_window();
     initialize_screen();
@@ -31,14 +34,15 @@ void initialize_display(){
 }
 
 void initialize_window(){
-   gWindow = Window();
+//   gWindow = Window(); //Window already initialized at variable declaration
 }
 
 void initialize_screen(){
     //Graphics card does rendering
-    Screen.renderer = SDL_CreateRenderer(gWindow.window, 
+    Screen.renderer = SDL_CreateRenderer(gWindow.sdlWindow, 
                                              -1,
                                              SDL_RENDERER_ACCELERATED | SDL_RENDERER_PRESENTVSYNC); 
+
     //Show 
     SDL_RenderPresent(Screen.renderer);
 

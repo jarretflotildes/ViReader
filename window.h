@@ -6,7 +6,7 @@
 
 class Window{
     public: 
-        SDL_Window *window;
+        SDL_Window *sdlWindow;
 
         Window();               // default 1200 x 720
         Window(int mode);

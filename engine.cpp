@@ -35,7 +35,6 @@ void engine_driver(){
                   switch(winEvent.key.keysym.sym){
 	                  case SDLK_SPACE:
                         controls_spacebar(Console,Screen);
-//SDL_RenderCopy(Screen.renderer, Message, NULL, &Message_rect);
                    		break;
                      default:
 		                  break;

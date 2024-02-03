@@ -13,6 +13,9 @@
 
 #include <SDL2/SDL.h>
 
+using std::cout;
+using std::endl;
+
 void driver(char *argv[]){
     initialize_parse(argv[1]);
 
@@ -20,13 +23,13 @@ void driver(char *argv[]){
     initialize_controls();
 
     engine_driver();
-
     controls_shutdown();
     display_shutdown();
     parse_shutdown(); 
 }
 
 int main(int args, char *argv[]){
+cout << "STARTING PROGRAM..." << endl;
     /*
     using std::chrono::high_resolution_clock;
     using std::chrono::duration_cast;
@@ -47,6 +50,7 @@ driver(argv);
 
     std::cout << std::endl << "IT TOOK " << ms_int.count() << "M/S TO COMPLETE\n";
 */
+cout << "SHUTTING DOWN..." << endl;
     return EXIT_SUCCESS;
 
 }
