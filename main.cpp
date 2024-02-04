@@ -6,6 +6,7 @@
 #include "display.h"
 #include "engine.h"
 #include "controls.h"
+#include "window.h"
 
 #include <chrono> //XXX REMOVE IN WORKING VERSIONS
 
@@ -19,12 +20,12 @@ using std::endl;
 void driver(char *argv[]){
     initialize_parse(argv[1]);
 
-    initialize_display();
-    initialize_controls();
+//    initialize_display();
+//    initialize_controls(display_getWindow());
 
-    engine_driver();
-    controls_shutdown();
-    display_shutdown();
+//    engine_driver();
+//    controls_shutdown();
+//    display_shutdown();
     parse_shutdown(); 
 }
 

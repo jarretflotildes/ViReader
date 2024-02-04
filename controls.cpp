@@ -32,9 +32,9 @@ vector<SDL_Surface*> getSurfaces(){
     return Surfaces;
 }
 
-void initialize_controls(){
+void initialize_controls(WindowManager window){
 
-    text Text = display_getText();
+    text Text = window.getText();
 
     for(int i = 0;i<parse_getNumLines();i++){
        string line = parse_getText().at(i);
@@ -54,20 +54,20 @@ void controls_shutdown(){
 
 void controls_spacebar(console Console, screen Screen){
 	SDL_DestroyTexture(Screen.text);
-    incrementCurrentText();
    
     int heightOffset = 0;
-SDL_RenderClear(Screen.renderer);
+    SDL_RenderClear(Screen.renderer);
 
     Console.consoleRect.w = Surfaces.at(CURRENT_TEXT)->w;
     Console.consoleRect.h = Surfaces.at(CURRENT_TEXT)->h + heightOffset;
 
   	Screen.text = SDL_CreateTextureFromSurface(Screen.renderer,Surfaces.at(CURRENT_TEXT));
     update_screen();
-SDL_RenderClear(Screen.renderer);
     SDL_RenderCopy(Screen.renderer,Screen.text,NULL,&Console.consoleRect);
     //Show
     SDL_RenderPresent(Screen.renderer);
+
+    incrementCurrentText();
 
 }
 
@@ -77,4 +77,3 @@ void incrementCurrentText(){
         CURRENT_TEXT = 0;
     }
 }
-

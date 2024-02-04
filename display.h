@@ -7,13 +7,6 @@
 
 #include "window.h"
 
-//text settings
-typedef struct {
-    TTF_Font *font;
-    Uint8 fontSize;
-    SDL_Color fontColor;
-} text;
-
 //Screen
 typedef struct{
    SDL_Renderer *renderer;
@@ -32,7 +25,6 @@ typedef struct{
 void initialize_display();
 void initialize_window();
 void initialize_screen();
-void initialize_text();
 void initialize_console();
 
 //updaters
@@ -40,8 +32,7 @@ void update_screen();
 void update_console();
 
 //getters
-Window display_getWindow();
-text display_getText();
+WindowManager display_getWindow();
 screen display_getScreen();
 console display_getConsole();
 

@@ -6,13 +6,13 @@
 
 #include <SDL2/SDL.h>
 #include <vector>
+#include "window.h"
 
-void initialize_controls();
+void initialize_controls(WindowManager window);
 void controls_shutdown();
 
 void controls_spacebar(console Console, screen Screen);
 
 void incrementCurrentText();
-
 
 #endif

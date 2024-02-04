@@ -21,13 +21,14 @@ int NUM_LINES;
 vector<string> TXT_FILE;
 
 void initialize_parse(char *fName){
-    CHARACTER_LIMIT = 60;
+    CHARACTER_LIMIT = 50;
     NUM_LINES = 0;
     extract_text(fName);
 
     //FORMAT TEXT
     for(int i = 0;i<parse_getNumLines();i++){
          parse_CutLine(i);
+cout << "OUTPUT: " << TXT_FILE.at(i) << endl;
     }
 
 }
@@ -67,7 +68,7 @@ string parse_CutLine(int i){
 
    string line = TXT_FILE.at(i);
 
-   if((int)line.length() >= CHARACTER_LIMIT){
+   if((int)line.length() > CHARACTER_LIMIT){
       string firstHalf = line.substr(0,CHARACTER_LIMIT);
       string secondHalf = line.substr(CHARACTER_LIMIT,line.length());
 
@@ -111,7 +112,7 @@ string cutLine_Case1(string firstHalf, string secondHalf, string firstHalf_lastW
       while(firstHalf.back() != ' '){
          firstHalf.pop_back();
       }
-   }
+   } 
 
    char secondHalf_firstCharacter = secondHalf.at(0);
 
@@ -139,15 +140,18 @@ string cutLine_Case1(string firstHalf, string secondHalf, string firstHalf_lastW
          nextCharacter != '\v') { //vertical tab
 //            cout << int(TXT_FILE->at(i+1).at(0)) << endl;
             string newLine = firstHalf_lastWord + secondHalf + " " + TXT_FILE.at(i+1);
+//cout << "RECONSTRUCTED1: " << newLine << endl;
             TXT_FILE.at(i+1) = newLine;
 
          } else{
             string newLine = firstHalf_lastWord + secondHalf;
+//cout << "RECONSTRUCTED2: " << newLine << endl;
             TXT_FILE.insert(TXT_FILE.begin()+i+1,newLine);
             NUM_LINES = TXT_FILE.size();   //Update GLOBAL SIZE 
       }
    } else {
       string newLine = firstHalf_lastWord + secondHalf;
+//cout << "RECONSTRUCTED3: " << newLine << endl;
       TXT_FILE.push_back(newLine);
       NUM_LINES = TXT_FILE.size();         //UPDATE GLOBAL SIZE
    }

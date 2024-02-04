@@ -17,9 +17,7 @@
 #include "display.h"
 #include "window.h"
 
-Window gWindow;
-
-text Text;
+WindowManager gWindow;
 screen Screen;
 console Console;
 
@@ -29,7 +27,6 @@ using std::endl;
 void initialize_display(){
     initialize_window();
     initialize_screen();
-    initialize_text();
     initialize_console();
 }
 
@@ -46,40 +43,11 @@ void initialize_screen(){
     //Show 
     SDL_RenderPresent(Screen.renderer);
 
+    int width = gWindow.getWidth() * 0.75;
+    int height = gWindow.getHeight() * 0.75;
+
     //Draw Text
-    SDL_CreateTexture(Screen.renderer, SDL_PIXELFORMAT_RGBA8888, SDL_TEXTUREACCESS_STREAMING, 640, 480);
-
-}
-
-void initialize_text(){
-   //Text Color for System
-   Text.font = NULL;
-   //White text
-   Text.fontColor.r = 255; 
-   Text.fontColor.g = 255; 
-   Text.fontColor.b = 255;
-
-   //TODO Adjust fontsize based on screen resolution
-   Text.fontSize = 72;
-
-   if (TTF_Init() < 0) {
-      printf("error initializing SDL_ttf: %s\n", TTF_GetError());
-      exit(-1);
-   }
-
-   // Load font file
-   #ifdef __linux__
-   Text.font = TTF_OpenFont("/usr/share/fonts/truetype/ubuntu/Ubuntu-B.ttf", Text.fontSize);
-   #elif __APPLE__
-   Text.font = TTF_OpenFont("/Library/Fonts/Arial.ttf", Text.fontSize);
-   #elif _WIN32
-   Text.font = TTF_OpenFont("C:/Windows/Fonts/arial.ttf", Text.fontSize);
-   #endif
-	
-   if (Text.font == NULL) { 
-      printf("error loading font file: %s\n", TTF_GetError());
-      exit(-1);
-   }
+    SDL_CreateTexture(Screen.renderer, SDL_PIXELFORMAT_RGBA8888, SDL_TEXTUREACCESS_STREAMING,width,height);
 
 }
 
@@ -111,13 +79,10 @@ void update_screen(){
    SDL_RenderPresent(Screen.renderer);
 }
 
-Window display_getWindow(){
+WindowManager display_getWindow(){
    return gWindow;
 }
 
-text display_getText(){
-   return Text;
-}
 
 screen display_getScreen(){
    return Screen;
