@@ -21,14 +21,14 @@ int NUM_LINES;
 vector<string> TXT_FILE;
 
 void initialize_parse(char *fName){
-    CHARACTER_LIMIT = 50;
+    CHARACTER_LIMIT = 80;
     NUM_LINES = 0;
     extract_text(fName);
 
     //FORMAT TEXT
     for(int i = 0;i<parse_getNumLines();i++){
          parse_CutLine(i);
-cout << "OUTPUT: " << TXT_FILE.at(i) << endl;
+cout << TXT_FILE.at(i) << endl;
     }
 
 }
@@ -82,9 +82,9 @@ string parse_CutLine(int i){
       
       if(firstHalf_lastWord.empty() == false){
 //      if((int)firstHalf_lastWord.length() < CHARACTER_LIMIT){
-         line = cutLine_Case1(firstHalf,secondHalf,firstHalf_lastWord,i);
+         line = cutLine_Case1(line,firstHalf,secondHalf,firstHalf_lastWord,i);
       } else {
-         line = cutLine_Case2(firstHalf,secondHalf,firstHalf_lastWord,i);
+         line = cutLine_Case2(line,firstHalf,secondHalf,firstHalf_lastWord,i);
       }
 
    }
@@ -98,30 +98,36 @@ string parse_CutLine(int i){
       - Removes any leftover letters from first half 
       - Returns formatted firsthalf while updating/adding next value in table
 */
-string cutLine_Case1(string firstHalf, string secondHalf, string firstHalf_lastWord,int i){
-   
+string cutLine_Case1(string line, string firstHalf, string secondHalf, string firstHalf_lastWord,int i){
    //No need to do anything else if second half is empty
    if(secondHalf.empty() == true){
       return firstHalf;
    } 
 
-   char firstHalf_lastCharacter = firstHalf_lastWord.back();
-
    if(firstHalf_lastWord != ""){
       //remove leftovers of last word
+      if(firstHalf.back() == ' '){
+
+      }
+
       while(firstHalf.back() != ' '){
          firstHalf.pop_back();
       }
    } 
 
-   char secondHalf_firstCharacter = secondHalf.at(0);
+   string secondHalf_firstWord = getFirstWord(secondHalf);
 
-   //word is split from line limit, move word to next line
-   if(firstHalf_lastCharacter != ' ' && 
-   secondHalf_firstCharacter != ' '){
-      if ((secondHalf.back() == '\n' || secondHalf.back() == ' ') || secondHalf.back() == '\r') {
-         secondHalf.pop_back();
-      }
+   /*
+cout << "First Half    1: " << firstHalf << endl;
+cout << "Second Half   2: " << secondHalf << endl;
+cout << "LAST WORD IS  3: " << firstHalf_lastWord << endl; 
+cout << "FIRST WORD IS 4: " << secondHalf_firstWord << endl;
+cout << "COMBINE       5: " << firstHalf << firstHalf_lastWord << secondHalf << endl;
+cout << "Original       : " << line << endl;
+*/
+   //perfect match if reconstructed original does not equal so turn last word to empty string
+   if(line != (firstHalf + firstHalf_lastWord + secondHalf)){
+        firstHalf_lastWord = "";
    }
 
    //remove any special characters at end of string
@@ -138,20 +144,16 @@ string cutLine_Case1(string firstHalf, string secondHalf, string firstHalf_lastW
       if(nextCharacter != '\r' && //enter
          nextCharacter != '\n' && //new line 
          nextCharacter != '\v') { //vertical tab
-//            cout << int(TXT_FILE->at(i+1).at(0)) << endl;
             string newLine = firstHalf_lastWord + secondHalf + " " + TXT_FILE.at(i+1);
-//cout << "RECONSTRUCTED1: " << newLine << endl;
             TXT_FILE.at(i+1) = newLine;
 
          } else{
             string newLine = firstHalf_lastWord + secondHalf;
-//cout << "RECONSTRUCTED2: " << newLine << endl;
             TXT_FILE.insert(TXT_FILE.begin()+i+1,newLine);
             NUM_LINES = TXT_FILE.size();   //Update GLOBAL SIZE 
       }
    } else {
       string newLine = firstHalf_lastWord + secondHalf;
-//cout << "RECONSTRUCTED3: " << newLine << endl;
       TXT_FILE.push_back(newLine);
       NUM_LINES = TXT_FILE.size();         //UPDATE GLOBAL SIZE
    }
@@ -164,11 +166,16 @@ string cutLine_Case1(string firstHalf, string secondHalf, string firstHalf_lastW
 /*
   Extremely Rare Case, for now just leave leftover text and  
 */
-string cutLine_Case2(string firstHalf, string secondHalf, string firstHalf_lastWord,int i){
+string cutLine_Case2(string line, string firstHalf, string secondHalf, string firstHalf_lastWord,int i){
    //remove any special characters at end of string
    if(secondHalf.back() == '\n' || secondHalf.back() == '\r'){ 
       //cout << "removing " << int(secondHalf.at(secondHalf.length()-1)) << endl;;
       secondHalf.erase(secondHalf.length()-1);
+   }
+
+   //perfect match if reconstructed original does not equal so turn last word to empty string
+   if(line != (firstHalf + firstHalf_lastWord + secondHalf)){
+        firstHalf_lastWord = "";
    }
 
    char lastCharacter = firstHalf.at(firstHalf.length()-1);
@@ -182,11 +189,8 @@ string cutLine_Case2(string firstHalf, string secondHalf, string firstHalf_lastW
       if(nextCharacter != '\r' && //enter
          nextCharacter != '\n' && //new line 
          nextCharacter != '\v') { //vertical tab
-//            cout << int(TXT_FILE->at(i+1).at(0)) << endl;
-
             string newLine = lastCharacter + secondHalf + " " + TXT_FILE.at(i+1);
             TXT_FILE.at(i+1) = newLine;
-
          } else{
             string newLine = lastCharacter + secondHalf;
             TXT_FILE.insert(TXT_FILE.begin()+i+1,newLine);
@@ -195,12 +199,26 @@ string cutLine_Case2(string firstHalf, string secondHalf, string firstHalf_lastW
    } else {
       string newLine = lastCharacter + firstHalf_lastWord + secondHalf;
       TXT_FILE.push_back(newLine);
-      NUM_LINES = TXT_FILE.size();
-      NUM_LINES++;         //UPDATE GLOBAL SIZE
+      NUM_LINES = TXT_FILE.size();         //UPDATE GLOBAL SIZE
    }
 
    TXT_FILE.at(i) = firstHalf; //UPDATE GLOBAL TEXT TABLE
    return firstHalf;
+
+}
+
+/*
+   Get first word in string
+*/
+string getFirstWord(string line){
+   
+   size_t space_pos = line.find(" ");
+   
+   if (space_pos != std::string::npos) {
+      line = line.substr(0,space_pos + 1);
+   }
+
+   return line;
 
 }
 

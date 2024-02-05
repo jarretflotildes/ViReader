@@ -12,9 +12,10 @@ void extract_text(char *fName);
 void parse_shutdown();
 
 string parse_CutLine(int i);
-string cutLine_Case1(string firstHalf, string secondHalf, string firstHalf_lastWord ,int i);
-string cutLine_Case2(string firstHalf, string secondHalf, string firstHalf_lastWord ,int i);
+string cutLine_Case1(string line, string firstHalf, string secondHalf, string firstHalf_lastWord,int i);
+string cutLine_Case2(string line, string firstHalf, string secondHalf, string firstHalf_lastWord ,int i);
 
+string getFirstWord(string line);
 string getLastWord(string line);
 
 int parse_getNumLines();
