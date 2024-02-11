@@ -3,9 +3,12 @@
 #define DISPLAY_H
 
 #include <SDL2/SDL.h>
+#include <SDL2/SDL_image.h>
 #include <SDL_ttf.h>
+#include <vector>
 
 #include "window.h"
+
 
 //Screen
 typedef struct{
@@ -26,6 +29,7 @@ void initialize_display();
 void initialize_window();
 void initialize_screen();
 void initialize_console();
+void initialize_SurfaceText();
 
 //updaters
 void update_screen();
@@ -36,6 +40,10 @@ WindowManager display_getWindow();
 screen display_getScreen();
 console display_getConsole();
 
+std::vector<SDL_Surface*> display_getSurfaceText();
+int display_getSurfaceTextIndex();
+
+//Shutdown
 void display_shutdown();
 
 #endif

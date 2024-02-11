@@ -1,6 +1,7 @@
 #include <stdio.h>
 #include <stdbool.h>
 #include <iostream>
+#include <vector>
 
 //initializing and shutdown functions
 #include <SDL2/SDL.h>
@@ -15,6 +16,10 @@
 #include "display.h"
 #include "controls.h"
 
+using std::vector;
+using std::cout;
+using std::endl;
+
 /*
  * Main loop of program
  */
@@ -24,6 +29,7 @@ void engine_driver(){
    bool running = true;
    console Console = display_getConsole();
    screen Screen = display_getScreen();
+   vector<SDL_Surface*> textSurfaces = display_getSurfaceText();
 
    //Main Driver
    while (running){
@@ -34,7 +40,7 @@ void engine_driver(){
          } else if(winEvent.type == SDL_KEYDOWN){
                   switch(winEvent.key.keysym.sym){
 	                  case SDLK_SPACE:
-                        controls_spacebar(Console,Screen);
+                        controls_spacebar(textSurfaces,Console,Screen);
                    		break;
                      default:
 		                  break;

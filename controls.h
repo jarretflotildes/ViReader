@@ -8,11 +8,6 @@
 #include <vector>
 #include "window.h"
 
-void initialize_controls(WindowManager window);
-void controls_shutdown();
-
-void controls_spacebar(console Console, screen Screen);
-
-void incrementCurrentText();
+void controls_spacebar(std::vector<SDL_Surface*> textSurfaces, console Console, screen Screen);
 
 #endif

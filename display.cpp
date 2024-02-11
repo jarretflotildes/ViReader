@@ -1,6 +1,8 @@
 #include <stdio.h>
 #include <stdbool.h>
 #include <iostream>
+#include <cstring>
+#include <vector>
 
 //initializing and shutdown functions
 #include <SDL2/SDL.h>
@@ -16,23 +18,33 @@
 
 #include "display.h"
 #include "window.h"
+#include "parse.h"
+
+using std::vector;
+using std::cout;
+using std::endl;
+
 
 WindowManager gWindow;
 screen Screen;
 console Console;
 
-using std::cout;
-using std::endl;
+vector<SDL_Surface*> TextSurfaces;
+int CurrentText;
 
 void initialize_display(){
-    initialize_window();
+//    initialize_window();
     initialize_screen();
     initialize_console();
+    initialize_SurfaceText();
 }
 
+
+/*
 void initialize_window(){
 //   gWindow = Window(); //Window already initialized at variable declaration
 }
+*/
 
 void initialize_screen(){
     //Graphics card does rendering
@@ -65,6 +77,22 @@ void initialize_console(){
    // set console location
    Console.consoleRect.x = console_x;    Console.consoleRect.y = console_y;
    Console.consoleRect.w = console_width; Console.consoleRect.h = console_height;
+
+
+}
+
+void initialize_SurfaceText(){
+
+    text Text = gWindow.getText();
+
+    for(int i = 0;i<parse_getNumLines();i++){
+       string line = parse_getText().at(i);
+       SDL_Surface *currentSurface = TTF_RenderText_Solid(Text.font,line.c_str(),(SDL_Color){0,0,0});
+       TextSurfaces.push_back(currentSurface);
+    }
+
+    CurrentText = 0;
+
 }
 
 void update_screen(){
@@ -92,6 +120,18 @@ console display_getConsole(){
    return Console;
 }
 
+vector<SDL_Surface*> display_getSurfaceText(){
+    return TextSurfaces;
+}
+
+int display_getSurfaceTextIndex(){
+   CurrentText++;
+   if(CurrentText >= parse_getNumLines()){
+      CurrentText = 0;
+   }
+   return CurrentText;
+}
+
 void display_shutdown(){
    //Font
    TTF_Quit();
@@ -105,6 +145,11 @@ void display_shutdown(){
    //Console
    SDL_FreeSurface(Console.surfaceConsole);
    SDL_DestroyTexture(Console.textureMessage);
+
+   //Text
+   for(int i = 0;i<parse_getNumLines();i++){
+        SDL_FreeSurface(TextSurfaces.at(i));
+   }
 
    SDL_Quit();
 }
