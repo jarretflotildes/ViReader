@@ -24,12 +24,35 @@ using std::endl;
  * Main loop of program
  */
 void engine_driver(){
-
    SDL_Event winEvent;
    bool running = true;
+
+   WindowManager gWin = display_getWindow();
    console Console = display_getConsole();
+   /*
+      typedef struct{
+         SDL_Surface *surfaceConsole;
+         SDL_Texture *textureMessage;
+         SDL_Rect consoleRect; //rect where text displayed
+      } console; 
+
+   */
+
    screen Screen = display_getScreen();
+   /*
+      typedef struct{
+         SDL_Renderer *renderer;
+         SDL_Texture  *text;
+         SDL_Surface  *surface;
+      } screen;
+   */
+
    vector<SDL_Surface*> textSurfaces = display_getSurfaceText();
+
+   //Draw Text
+   SDL_CreateTexture(Screen.renderer, SDL_PIXELFORMAT_RGBA8888, SDL_TEXTUREACCESS_STREAMING,gWin.getWidth(),gWin.getHeight());
+   //Show
+   SDL_RenderPresent(Screen.renderer);
 
    //Main Driver
    while (running){
@@ -40,7 +63,7 @@ void engine_driver(){
          } else if(winEvent.type == SDL_KEYDOWN){
                   switch(winEvent.key.keysym.sym){
 	                  case SDLK_SPACE:
-                        controls_spacebar(textSurfaces,Console,Screen);
+                        controls_spacebar(textSurfaces,Console,Screen); //advance text
                    		break;
                      default:
 		                  break;

@@ -67,8 +67,8 @@ void initialize_console(){
    int width = gWindow.getWidth();
    int height = gWindow.getHeight();
 
-   int console_width =  (int)(0.85 * width);
-   int console_height = (int)(0.85 * height);
+   int console_width =  (int)(0.90 * width);
+   int console_height = (int)(0.90 * height);
 
    // calculate the position of the top-left corner of the rectangle
    int console_x = (int)((width - console_width) / 2);
@@ -78,7 +78,6 @@ void initialize_console(){
    Console.consoleRect.x = console_x;    Console.consoleRect.y = console_y;
    Console.consoleRect.w = console_width; Console.consoleRect.h = console_height;
 
-
 }
 
 void initialize_SurfaceText(){
@@ -87,6 +86,7 @@ void initialize_SurfaceText(){
 
     for(int i = 0;i<parse_getNumLines();i++){
        string line = parse_getText().at(i);
+//       SDL_Surface *currentSurface = TTF_RenderText_Blended_Wrapped(Text.font,line.c_str(),(SDL_Color){0,0,0},60); //wraps text around
        SDL_Surface *currentSurface = TTF_RenderText_Solid(Text.font,line.c_str(),(SDL_Color){0,0,0});
        TextSurfaces.push_back(currentSurface);
     }
@@ -95,16 +95,12 @@ void initialize_SurfaceText(){
 
 }
 
-void update_screen(){
+void display_updateScreen(){
    //Clear Screen
    SDL_RenderClear(Screen.renderer);
    //Console
    SDL_SetRenderDrawColor(Screen.renderer, 30, 30, 30, 140);
    SDL_RenderFillRect(Screen.renderer, &Console.consoleRect); 
-   //Text
-   SDL_RenderCopy(Screen.renderer,Screen.text,NULL,&Console.consoleRect);
-   //Show
-   SDL_RenderPresent(Screen.renderer);
 }
 
 WindowManager display_getWindow(){

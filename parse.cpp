@@ -9,19 +9,18 @@
 #include <bits/stdc++.h>
  
 #include "parse.h"
+#include "display.h"
 
 using std::cout;
 using std::endl;
 using std::string;
 using std::vector;
 
-int CHARACTER_LIMIT;
 int NUM_LINES;
 
 vector<string> TXT_FILE;
 
 void initialize_parse(char *fName){
-    CHARACTER_LIMIT = 80;
     NUM_LINES = 0;
     extract_text(fName);
 
@@ -67,10 +66,11 @@ void extract_text(char *fName){
 string parse_CutLine(int i){
 
    string line = TXT_FILE.at(i);
+   int characterLimit = display_getWindow().getTextLimit();
 
-   if((int)line.length() > CHARACTER_LIMIT){
-      string firstHalf = line.substr(0,CHARACTER_LIMIT);
-      string secondHalf = line.substr(CHARACTER_LIMIT,line.length());
+   if((int)line.length() > characterLimit){
+      string firstHalf = line.substr(0,characterLimit);
+      string secondHalf = line.substr(characterLimit,line.length());
 
       string firstHalf_lastWord = getLastWord(firstHalf);
 

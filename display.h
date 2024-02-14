@@ -9,7 +9,6 @@
 
 #include "window.h"
 
-
 //Screen
 typedef struct{
    SDL_Renderer *renderer;
@@ -32,7 +31,7 @@ void initialize_console();
 void initialize_SurfaceText();
 
 //updaters
-void update_screen();
+void display_updateScreen();
 void update_console();
 
 //getters

@@ -103,11 +103,16 @@ text WindowManager::getText(){
     return textSettings;
 }
 
+int WindowManager::getTextLimit(){
+    return textCharacterLimit;
+}
+
 void WindowManager::setCurrentScaleMode(int mode){
    currentScaleMode = mode;
 
    //Text Color for System
    textSettings.font = NULL;
+
    //White text
    textSettings.fontColor.r = 255; 
    textSettings.fontColor.g = 255; 
@@ -117,12 +122,14 @@ void WindowManager::setCurrentScaleMode(int mode){
         case 0: 
             width = 1200;
             height = 720;
+            textCharacterLimit = 55;
             textSettings.fontSize = 40;
             break;
     
         default:
             width = 1200;
             height = 720;
+            textCharacterLimit = 55;
             textSettings.fontSize = 40;
             currentScaleMode = 0;
             break;

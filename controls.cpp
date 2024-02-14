@@ -22,23 +22,34 @@
 using std::cout;
 using std::endl;
 
-
-
 void controls_spacebar(vector<SDL_Surface*> textSurfaces, console Console, screen Screen){
-int currentIndex = display_getSurfaceTextIndex();
-    
+    int currentIndex = display_getSurfaceTextIndex();
+    int offset = 0;
+
 	  SDL_DestroyTexture(Screen.text);
-   
-    int heightOffset = 0;
     SDL_RenderClear(Screen.renderer);
 
-    Console.consoleRect.w = textSurfaces.at(currentIndex)->w;
-    Console.consoleRect.h = textSurfaces.at(currentIndex)->h + heightOffset;
+for(int i = 0;i<3;i++){
+    int text_width = textSurfaces.at(currentIndex)->w;
+    int text_height = textSurfaces.at(currentIndex)->h;
 
+    Console.consoleRect.x = 0;
+    Console.consoleRect.y = 0 + offset;
+    Console.consoleRect.w = text_width;
+    Console.consoleRect.h = text_height;
   	Screen.text = SDL_CreateTextureFromSurface(Screen.renderer, textSurfaces.at(currentIndex));
-    update_screen();
+
+//    display_updateScreen();
+   //Console
+   SDL_SetRenderDrawColor(Screen.renderer, 30, 30, 30, 140);
+   SDL_RenderFillRect(Screen.renderer, &Console.consoleRect); 
+
     SDL_RenderCopy(Screen.renderer,Screen.text,NULL,&Console.consoleRect);
-    //Show
+currentIndex = display_getSurfaceTextIndex();
+
+offset+= 50;
+}
     SDL_RenderPresent(Screen.renderer);
 
 }
+

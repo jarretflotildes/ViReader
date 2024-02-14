@@ -19,9 +19,7 @@ using std::endl;
 
 void driver(char *argv[]){
     initialize_parse(argv[1]);
-
     initialize_display();
-
     engine_driver();
     display_shutdown();
     parse_shutdown(); 
