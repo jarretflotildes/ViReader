@@ -24,18 +24,16 @@ typedef struct{
 } console; 
 
 //initializers
-void initialize_display();
-void initialize_window();
-void initialize_screen();
-void initialize_console();
-void initialize_SurfaceText();
+void initialize_display(WindowManager *window);
+void initialize_window(WindowManager *window);
+void initialize_screen(WindowManager *window);
+void initialize_console(WindowManager *window);
+void initialize_SurfaceText(WindowManager *window);
 
 //updaters
-void display_updateScreen();
 void update_console();
 
 //getters
-WindowManager display_getWindow();
 screen display_getScreen();
 console display_getConsole();
 
@@ -43,6 +41,6 @@ std::vector<SDL_Surface*> display_getSurfaceText();
 int display_getSurfaceTextIndex();
 
 //Shutdown
-void display_shutdown();
+void display_shutdown(WindowManager *window);
 
 #endif

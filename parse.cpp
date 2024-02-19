@@ -17,11 +17,14 @@ using std::string;
 using std::vector;
 
 int NUM_LINES;
+int CharacterLimit;
 
 vector<string> TXT_FILE;
 
-void initialize_parse(char *fName){
+void initialize_parse(char *fName,int characterLimit){
     NUM_LINES = 0;
+    CharacterLimit = characterLimit;
+
     extract_text(fName);
 
     //FORMAT TEXT
@@ -66,7 +69,7 @@ void extract_text(char *fName){
 string parse_CutLine(int i){
 
    string line = TXT_FILE.at(i);
-   int characterLimit = display_getWindow().getTextLimit();
+   int characterLimit = CharacterLimit;
 
    if((int)line.length() > characterLimit){
       string firstHalf = line.substr(0,characterLimit);

@@ -7,7 +7,7 @@
 using std::string;
 using std::vector;
 
-void initialize_parse(char *fName);
+void initialize_parse(char *fName,int characterLimit);
 void extract_text(char *fName);
 void parse_shutdown();
 

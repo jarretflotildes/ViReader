@@ -25,6 +25,7 @@ class WindowManager{
         int getHeight();  
         int getWidth();
         int getTextLimit();
+        int getHeightOffset();
         text getText();
 
         void setMode(int mode);
@@ -32,9 +33,12 @@ class WindowManager{
 
     private:
         int currentScaleMode;
-        int textCharacterLimit;
         int width;
         int height;
+
+        int textCharacterLimit;
+        int textHeightOffset;
+
         text textSettings;
 
 };

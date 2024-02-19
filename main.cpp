@@ -18,10 +18,11 @@ using std::cout;
 using std::endl;
 
 void driver(char *argv[]){
-    initialize_parse(argv[1]);
-    initialize_display();
-    engine_driver();
-    display_shutdown();
+    WindowManager window = WindowManager(0);
+    initialize_parse(argv[1],window.getTextLimit());
+    initialize_display(&window);
+    engine_driver(&window);
+    display_shutdown(&window);
     parse_shutdown(); 
 }
 

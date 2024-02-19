@@ -24,48 +24,39 @@ using std::vector;
 using std::cout;
 using std::endl;
 
-
-WindowManager gWindow;
 screen Screen;
 console Console;
 
 vector<SDL_Surface*> TextSurfaces;
 int CurrentText;
 
-void initialize_display(){
-//    initialize_window();
-    initialize_screen();
-    initialize_console();
-    initialize_SurfaceText();
+void initialize_display(WindowManager *window){
+    initialize_screen(window);
+    initialize_console(window);
+    initialize_SurfaceText(window);
 }
 
+void initialize_screen(WindowManager *window){
 
-/*
-void initialize_window(){
-//   gWindow = Window(); //Window already initialized at variable declaration
-}
-*/
-
-void initialize_screen(){
     //Graphics card does rendering
-    Screen.renderer = SDL_CreateRenderer(gWindow.sdlWindow, 
+    Screen.renderer = SDL_CreateRenderer(window->sdlWindow, 
                                              -1,
                                              SDL_RENDERER_ACCELERATED | SDL_RENDERER_PRESENTVSYNC); 
 
     //Show 
     SDL_RenderPresent(Screen.renderer);
 
-    int width = gWindow.getWidth() * 0.75;
-    int height = gWindow.getHeight() * 0.75;
+    int width = window->getWidth() * 0.75;
+    int height = window->getHeight() * 0.75;
 
     //Draw Text
     SDL_CreateTexture(Screen.renderer, SDL_PIXELFORMAT_RGBA8888, SDL_TEXTUREACCESS_STREAMING,width,height);
 
 }
 
-void initialize_console(){
-   int width = gWindow.getWidth();
-   int height = gWindow.getHeight();
+void initialize_console(WindowManager *window){
+   int width = window->getWidth();
+   int height = window->getHeight();
 
    int console_width =  (int)(0.90 * width);
    int console_height = (int)(0.90 * height);
@@ -80,33 +71,20 @@ void initialize_console(){
 
 }
 
-void initialize_SurfaceText(){
+void initialize_SurfaceText(WindowManager *window){
 
-    text Text = gWindow.getText();
+    text Text = window->getText();
 
     for(int i = 0;i<parse_getNumLines();i++){
        string line = parse_getText().at(i);
 //       SDL_Surface *currentSurface = TTF_RenderText_Blended_Wrapped(Text.font,line.c_str(),(SDL_Color){0,0,0},60); //wraps text around
-       SDL_Surface *currentSurface = TTF_RenderText_Solid(Text.font,line.c_str(),(SDL_Color){0,0,0});
+      SDL_Surface *currentSurface = TTF_RenderText_Solid(Text.font,line.c_str(),(SDL_Color){0,0,0});
        TextSurfaces.push_back(currentSurface);
     }
 
     CurrentText = 0;
 
 }
-
-void display_updateScreen(){
-   //Clear Screen
-   SDL_RenderClear(Screen.renderer);
-   //Console
-   SDL_SetRenderDrawColor(Screen.renderer, 30, 30, 30, 140);
-   SDL_RenderFillRect(Screen.renderer, &Console.consoleRect); 
-}
-
-WindowManager display_getWindow(){
-   return gWindow;
-}
-
 
 screen display_getScreen(){
    return Screen;
@@ -128,7 +106,7 @@ int display_getSurfaceTextIndex(){
    return CurrentText;
 }
 
-void display_shutdown(){
+void display_shutdown(WindowManager *window){
    //Font
    TTF_Quit();
 
@@ -136,7 +114,7 @@ void display_shutdown(){
    SDL_DestroyRenderer(Screen.renderer);
 
    //Window
-   gWindow.shutdown_Window();
+   window->shutdown_Window();
 
    //Console
    SDL_FreeSurface(Console.surfaceConsole);

@@ -15,6 +15,7 @@
 #include "engine.h"
 #include "display.h"
 #include "controls.h"
+#include "window.h"
 
 using std::vector;
 using std::cout;
@@ -23,11 +24,11 @@ using std::endl;
 /*
  * Main loop of program
  */
-void engine_driver(){
+void engine_driver(WindowManager *window){
    SDL_Event winEvent;
    bool running = true;
 
-   WindowManager gWin = display_getWindow();
+   WindowManager gWin = *window;
    console Console = display_getConsole();
    /*
       typedef struct{

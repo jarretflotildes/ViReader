@@ -107,6 +107,10 @@ int WindowManager::getTextLimit(){
     return textCharacterLimit;
 }
 
+int WindowManager::getHeightOffset(){
+    return textHeightOffset;
+}
+
 void WindowManager::setCurrentScaleMode(int mode){
    currentScaleMode = mode;
 
@@ -123,6 +127,7 @@ void WindowManager::setCurrentScaleMode(int mode){
             width = 1200;
             height = 720;
             textCharacterLimit = 55;
+            textHeightOffset = 50;
             textSettings.fontSize = 40;
             break;
     
@@ -130,6 +135,7 @@ void WindowManager::setCurrentScaleMode(int mode){
             width = 1200;
             height = 720;
             textCharacterLimit = 55;
+            textHeightOffset = 50;
             textSettings.fontSize = 40;
             currentScaleMode = 0;
             break;
