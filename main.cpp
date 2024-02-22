@@ -23,7 +23,6 @@ void driver(char *argv[]){
     initialize_display(&window);
     engine_driver(&window);
     display_shutdown(&window);
-    parse_shutdown(); 
 }
 
 int main(int args, char *argv[]){

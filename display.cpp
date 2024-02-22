@@ -26,7 +26,6 @@ using std::endl;
 
 screen Screen;
 console Console;
-
 vector<SDL_Surface*> TextSurfaces;
 int CurrentText;
 
@@ -105,6 +104,8 @@ int display_getSurfaceTextIndex(){
    }
    return CurrentText;
 }
+
+
 
 void display_shutdown(WindowManager *window){
    //Font

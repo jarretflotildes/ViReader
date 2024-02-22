@@ -30,12 +30,8 @@ void initialize_parse(char *fName,int characterLimit){
     //FORMAT TEXT
     for(int i = 0;i<parse_getNumLines();i++){
          parse_CutLine(i);
-cout << TXT_FILE.at(i) << endl;
+//cout << TXT_FILE.at(i) << endl;
     }
-
-}
-
-void parse_shutdown(){
 
 }
 

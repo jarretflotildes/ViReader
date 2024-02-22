@@ -55,6 +55,8 @@ void engine_driver(WindowManager *window){
    //Show
    SDL_RenderPresent(Screen.renderer);
 
+controls_spacebar(textSurfaces,window,Console,Screen); //initial text maybe temp XXX
+
    //Main Driver
    while (running){
       while(SDL_PollEvent(&winEvent)){
@@ -64,7 +66,7 @@ void engine_driver(WindowManager *window){
          } else if(winEvent.type == SDL_KEYDOWN){
                   switch(winEvent.key.keysym.sym){
 	                  case SDLK_SPACE:
-                        controls_spacebar(textSurfaces,Console,Screen); //advance text
+                        controls_spacebar(textSurfaces,window,Console,Screen); //advance text
                    		break;
                      default:
 		                  break;

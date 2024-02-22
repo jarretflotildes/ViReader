@@ -23,16 +23,15 @@ using std::cout;
 using std::endl;
 
 //The amount of lines of text that should be displayed no matter what screen size
-#define LINES 20
 
-void controls_spacebar(vector<SDL_Surface*> textSurfaces, console Console, screen Screen){
-    int currentIndex = display_getSurfaceTextIndex();
+void controls_spacebar(vector<SDL_Surface*> textSurfaces, WindowManager *window,console Console, screen Screen){
     int offset = 0;
 
-	  SDL_DestroyTexture(Screen.text);
+	SDL_DestroyTexture(Screen.text);
     SDL_RenderClear(Screen.renderer);
 
-    for(int i = 0;i<LINES;i++){
+    for(int i = 0;i<window->getDisplayLines();i++){
+       int currentIndex = display_getSurfaceTextIndex();
        int text_width = textSurfaces.at(currentIndex)->w;
        int text_height = textSurfaces.at(currentIndex)->h;
        Console.consoleRect.x = 0;
@@ -46,14 +45,11 @@ void controls_spacebar(vector<SDL_Surface*> textSurfaces, console Console, scree
        SDL_RenderFillRect(Screen.renderer, &Console.consoleRect); 
 
        SDL_RenderCopy(Screen.renderer,Screen.text,NULL,&Console.consoleRect);
-       currentIndex = display_getSurfaceTextIndex();
-       offset+= 50;
-       if(currentIndex+1 > parse_getNumLines()){
-          break; 
+       offset+= window->getTextOffset();
+       if(currentIndex+1 >= parse_getNumLines()){
+          break;
        }
 }
     SDL_RenderPresent(Screen.renderer);
-
-
 }
 
