@@ -25,7 +25,7 @@ typedef struct{
 
 //initializers
 void initialize_display(WindowManager *window);
-void initialize_window(WindowManager *window);
+void initialize_background(WindowManager *window);
 void initialize_screen(WindowManager *window);
 void initialize_console(WindowManager *window);
 void initialize_SurfaceText(WindowManager *window);
@@ -36,6 +36,7 @@ void update_console();
 //getters
 screen display_getScreen();
 console display_getConsole();
+SDL_Texture *display_getBackground();
 
 std::vector<SDL_Surface*> display_getSurfaceText();
 int display_getSurfaceTextIndex();

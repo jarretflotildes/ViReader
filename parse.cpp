@@ -26,6 +26,7 @@ void initialize_parse(char *fName,int characterLimit){
     CharacterLimit = characterLimit;
 
     extract_text(fName);
+//format_text(); //TODO
 
     //FORMAT TEXT
     for(int i = 0;i<parse_getNumLines();i++){
@@ -52,6 +53,13 @@ void extract_text(char *fName){
    }
 
    file.close();
+}
+/*
+   Read Text and format into proper format
+      Remove all special characters
+*/
+void formatText(){
+//Implement this XXX
 }
 
 /*

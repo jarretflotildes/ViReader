@@ -55,7 +55,7 @@ void engine_driver(WindowManager *window){
    //Show
    SDL_RenderPresent(Screen.renderer);
 
-controls_spacebar(textSurfaces,window,Console,Screen); //initial text maybe temp XXX
+   controls_spacebar(textSurfaces,window,Console,Screen); //advance text
 
    //Main Driver
    while (running){

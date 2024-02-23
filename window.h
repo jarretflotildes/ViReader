@@ -9,6 +9,8 @@ typedef struct {
     TTF_Font *font;
     Uint8 fontSize;
     SDL_Color fontColor;
+
+    SDL_Color backgroundColor;
 } text;
 
 class WindowManager{
@@ -25,9 +27,9 @@ class WindowManager{
         int getHeight();  
         int getWidth();
         int getDisplayLines();
+        text getTextSettings();
         int getTextLimit();
         int getTextOffset();
-        text getText();
 
         void setMode(int mode);
         void setFontSize(int size);

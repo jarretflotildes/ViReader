@@ -9,6 +9,8 @@ using std::endl;
 
 /* Mode 0: 1200 x 720
 
+   Mode 9: Full Screen
+
 */
 WindowManager::WindowManager(){
 
@@ -103,7 +105,7 @@ int WindowManager::getDisplayLines(){
     return displayLines;
 }
 
-text WindowManager::getText(){
+text WindowManager::getTextSettings(){
     return textSettings;
 }
 
@@ -118,6 +120,8 @@ int WindowManager::getTextOffset(){
 void WindowManager::setCurrentScaleMode(int mode){
    currentScaleMode = mode;
 
+   /* Values to set that are the same no matter how large window is */
+
    //Text Color for System
    textSettings.font = NULL;
 
@@ -126,7 +130,14 @@ void WindowManager::setCurrentScaleMode(int mode){
    textSettings.fontColor.g = 255; 
    textSettings.fontColor.b = 255;
 
-    switch (mode){
+   //Console Color
+   textSettings.backgroundColor.r = 150;
+   textSettings.backgroundColor.g = 150;
+   textSettings.backgroundColor.b = 150;
+   textSettings.backgroundColor.a = 185;
+
+   /* Window Specific settings */
+   switch (mode){
         case 0: 
             width = 1200;
             height = 720;

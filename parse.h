@@ -9,6 +9,7 @@ using std::vector;
 
 void initialize_parse(char *fName,int characterLimit);
 void extract_text(char *fName);
+void format_text();
 
 string parse_CutLine(int i);
 string cutLine_Case1(string line, string firstHalf, string secondHalf, string firstHalf_lastWord,int i);
