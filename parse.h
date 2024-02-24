@@ -19,6 +19,7 @@ string getFirstWord(string line);
 string getLastWord(string line);
 
 int parse_getNumLines();
+int parse_getPages();
 vector<string> parse_getText();
 bool containSpace(string line);
 

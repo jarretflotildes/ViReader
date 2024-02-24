@@ -14,7 +14,6 @@
 
 #include "engine.h"
 #include "display.h"
-#include "controls.h"
 #include "window.h"
 
 using std::vector;
@@ -29,7 +28,7 @@ void engine_driver(WindowManager *window){
    bool running = true;
 
    WindowManager gWin = *window;
-   console Console = display_getConsole();
+//   console Console = display_getConsole();
    /*
       typedef struct{
          SDL_Surface *surfaceConsole;
@@ -55,7 +54,7 @@ void engine_driver(WindowManager *window){
    //Show
    SDL_RenderPresent(Screen.renderer);
 
-   controls_spacebar(textSurfaces,window,Console,Screen); //advance text
+   display_MainScreen_ScrollText(window); //advance text
 
    //Main Driver
    while (running){
@@ -66,7 +65,8 @@ void engine_driver(WindowManager *window){
          } else if(winEvent.type == SDL_KEYDOWN){
                   switch(winEvent.key.keysym.sym){
 	                  case SDLK_SPACE:
-                        controls_spacebar(textSurfaces,window,Console,Screen); //advance text
+                        display_MainScreen_ScrollText(window);
+
                    		break;
                      default:
 		                  break;

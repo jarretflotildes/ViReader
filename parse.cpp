@@ -18,6 +18,7 @@ using std::vector;
 
 int NUM_LINES;
 int CharacterLimit;
+int Pages;
 
 vector<string> TXT_FILE;
 
@@ -26,13 +27,14 @@ void initialize_parse(char *fName,int characterLimit){
     CharacterLimit = characterLimit;
 
     extract_text(fName);
-//format_text(); //TODO
 
     //FORMAT TEXT
     for(int i = 0;i<parse_getNumLines();i++){
          parse_CutLine(i);
 //cout << TXT_FILE.at(i) << endl;
     }
+
+    //format_text(); //TODO
 
 }
 
@@ -50,6 +52,11 @@ void extract_text(char *fName){
    } else {
       printf("error loading text file\n");
       exit(-1);
+   }
+
+   Pages = NUM_LINES/10;
+   if(Pages == 0){
+      Pages = 1;
    }
 
    file.close();
@@ -245,6 +252,10 @@ string getLastWord(string line){
 
 int parse_getNumLines(){
    return NUM_LINES;
+}
+
+int parse_getPages(){
+   return Pages;
 }
 
 vector<string> parse_getText(){

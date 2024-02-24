@@ -24,6 +24,10 @@ using std::vector;
 using std::cout;
 using std::endl;
 
+#define TITLESCREEN 0
+#define MAINSCREEN 1
+#define SETTINGSCREEN 2
+
 screen Screen;
 /* typedef struct{
    SDL_Renderer *renderer;
@@ -31,6 +35,7 @@ screen Screen;
    SDL_Surface  *surface;
 } screen;
 */
+
 console Console;
 /* typedef struct{
    SDL_Surface *surfaceConsole;
@@ -42,7 +47,9 @@ SDL_Texture *Background;
 SDL_Rect *TempRectBackground; //Background to display if no background loaded from img
 
 vector<SDL_Surface*> TextSurfaces;
+
 int CurrentText;
+int CurrentScreen;
 
 void initialize_display(WindowManager *window){
     initialize_screen(window);
@@ -71,6 +78,8 @@ void initialize_screen(WindowManager *window){
 
 void initialize_background(WindowManager *window){
    SDL_Surface *surface = IMG_Load("img/1.png");
+
+   //Need to Fix this eventually... low priority
    if(surface == NULL){
       surface = SDL_CreateRGBSurface(0,10,10,10,10,10,10,10);
       SDL_FillRect(surface,TempRectBackground,0);
@@ -110,7 +119,7 @@ void initialize_SurfaceText(WindowManager *window){
     for(int i = 0;i<parse_getNumLines();i++){
        string line = parse_getText().at(i);
 //       SDL_Surface *currentSurface = TTF_RenderText_Blended_Wrapped(Text.font,line.c_str(),(SDL_Color){0,0,0},60); //wraps text around
-      SDL_Surface *currentSurface = TTF_RenderText_Solid(Text.font,line.c_str(),(SDL_Color){0,0,0});
+       SDL_Surface *currentSurface = TTF_RenderText_Solid(Text.font,line.c_str(),(SDL_Color){0,0,0});
        TextSurfaces.push_back(currentSurface);
     }
 
@@ -134,6 +143,9 @@ vector<SDL_Surface*> display_getSurfaceText(){
     return TextSurfaces;
 }
 
+/*
+   Get current index then increment it
+*/
 int display_getSurfaceTextIndex(){
    CurrentText++;
    if(CurrentText >= parse_getNumLines()){
@@ -142,15 +154,82 @@ int display_getSurfaceTextIndex(){
    return CurrentText;
 }
 
+void display_setSurfaceTextIndex(int index){
+   CurrentText = index;
+}
+
+/*  Helper function for rendering certain Backgrounds
+    TODO Expland role to accept int and render according background
+  */
+void display_RenderBackground(){
+    //Only render background, no need to present since other stuff will always need to be rendered on top of it
+    SDL_RenderCopy(Screen.renderer,display_getBackground(),NULL,NULL);
+}
+
+void display_RenderConsole(WindowManager *window){
+    text textSettings = window->getTextSettings();
+    SDL_SetRenderDrawColor(Screen.renderer,  textSettings.backgroundColor.r, 
+
+                                             textSettings.backgroundColor.g, 
+                                             textSettings.backgroundColor.b, 
+                                             textSettings.backgroundColor.a); //Background color of Console
+
+    SDL_SetRenderDrawBlendMode(Screen.renderer, SDL_BLENDMODE_BLEND);
+    SDL_RenderFillRect(Screen.renderer, &Console.consoleRect); 
+    SDL_RenderCopy(Screen.renderer,Screen.text,NULL,&Console.consoleRect);
+    SDL_RenderPresent(Screen.renderer);
+}
+
+void display_MainScreen_RenderText(WindowManager *window){
+    int offset = 0;
+
+    //Display Text
+    SDL_Rect displayText;
+
+    int xAlign = Console.consoleRect.x/2;
+    int yAlign = Console.consoleRect.y/2;
+
+    for(int i = 0;i<window->getDisplayLines();i++){
+       int currentIndex = display_getSurfaceTextIndex();
+       int text_width = TextSurfaces.at(currentIndex)->w;
+       int text_height = TextSurfaces.at(currentIndex)->h;
+
+       displayText.x = Console.consoleRect.x + xAlign;
+       displayText.y = Console.consoleRect.y + yAlign + offset;
+       displayText.w = text_width;
+       displayText.h = text_height;
+
+  	    Screen.text = SDL_CreateTextureFromSurface(Screen.renderer, TextSurfaces.at(currentIndex));
+
+       SDL_RenderCopy(Screen.renderer,Screen.text,NULL,&displayText);
+       offset+= window->getTextOffset();
+       if(currentIndex+1 >= parse_getNumLines()){
+          break;
+       }
+    }
+
+    SDL_RenderPresent(Screen.renderer);
+}
+
+/*
+   Renders background, console, and advances text
+*/
+void display_MainScreen_ScrollText(WindowManager *window){
+    SDL_RenderClear(Screen.renderer);
+    SDL_DestroyTexture(Screen.text);
+
+    display_RenderBackground();
+    display_RenderConsole(window);
+    display_MainScreen_RenderText(window);
+
+}
+
 void display_shutdown(WindowManager *window){
    //Font
    TTF_Quit();
 
    //Screen
    SDL_DestroyRenderer(Screen.renderer);
-
-   //Window
-   window->shutdown_Window();
 
    //Console
    SDL_FreeSurface(Console.surfaceConsole);

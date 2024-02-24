@@ -8,8 +8,8 @@ using std::cout;
 using std::endl;
 
 /* Mode 0: 1200 x 720
-
-   Mode 9: Full Screen
+   //TODO Implement other window sizes
+   Mode 9: Full Screen 
 
 */
 WindowManager::WindowManager(){
@@ -42,7 +42,7 @@ WindowManager::WindowManager(){
    #elif __APPLE__
    textSettings.font = TTF_OpenFont("/Library/Fonts/Arial.ttf", textSettings.fontSize);
    #elif _WIN32
-   textSettings.font = TTF_OpenFont("C:/Windows/Fonts/arial.ttf", textSettings.fontSize);
+   textSettings.font = TTF_OpenFont("C:/Windows/Fonts/Calibri.ttf", textSettings.fontSize);
    #endif
 	
    if (textSettings.font == NULL) { 
@@ -82,7 +82,8 @@ WindowManager::WindowManager(int mode){
    #elif __APPLE__
    textSettings.font = TTF_OpenFont("/Library/Fonts/Arial.ttf", textSettings.fontSize);
    #elif _WIN32
-   textSettings.font = TTF_OpenFont("C:/Windows/Fonts/arial.ttf", textSettings.fontSize);
+   textSettings.font = TTF_OpenFont("C:/Windows/Fonts/CORPORATE-MINCHO-VER2.ttf", textSettings.fontSize);
+   //textSettings.font = TTF_OpenFont("C:/Windows/Fonts/Arial.ttf",textSettings.fontSize);
    #endif
 	
    if (textSettings.font == NULL) { 
@@ -91,7 +92,6 @@ WindowManager::WindowManager(int mode){
    }
 
 }
-
 
 int WindowManager::getHeight(){
     return height;
@@ -131,9 +131,9 @@ void WindowManager::setCurrentScaleMode(int mode){
    textSettings.fontColor.b = 255;
 
    //Console Color
-   textSettings.backgroundColor.r = 150;
-   textSettings.backgroundColor.g = 150;
-   textSettings.backgroundColor.b = 150;
+   textSettings.backgroundColor.r = 100;
+   textSettings.backgroundColor.g = 140;
+   textSettings.backgroundColor.b = 180;
    textSettings.backgroundColor.a = 185;
 
    /* Window Specific settings */
@@ -167,4 +167,5 @@ void WindowManager::setFontSize(int size){
 
 void WindowManager::shutdown_Window(){
     SDL_DestroyWindow(sdlWindow);
+    TTF_CloseFont(textSettings.font);
 }

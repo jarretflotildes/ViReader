@@ -5,7 +5,6 @@
 #include "parse.h"
 #include "display.h"
 #include "engine.h"
-#include "controls.h"
 #include "window.h"
 
 #include <chrono> //XXX REMOVE IN WORKING VERSIONS
@@ -22,6 +21,7 @@ void driver(char *argv[]){
     initialize_parse(argv[1],window.getTextLimit());
     initialize_display(&window);
     engine_driver(&window);
+    window.shutdown_Window();
     display_shutdown(&window);
 }
 

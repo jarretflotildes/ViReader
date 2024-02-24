@@ -41,6 +41,18 @@ SDL_Texture *display_getBackground();
 std::vector<SDL_Surface*> display_getSurfaceText();
 int display_getSurfaceTextIndex();
 
+//Setters
+void display_setSurfaceTextIndex(int index);
+
+//Rendering Stuff
+//Helper functions for screen displaying
+void display_RenderBackground();
+void display_RenderConsole(WindowManager *window);
+
+//Screen Stuff
+void display_MainScreen_RenderText(WindowManager *window);
+void display_MainScreen_ScrollText(WindowManager *window);
+
 //Shutdown
 void display_shutdown(WindowManager *window);
 
