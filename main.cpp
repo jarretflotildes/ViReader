@@ -19,6 +19,7 @@ using std::endl;
 void driver(char *argv[]){
     WindowManager window = WindowManager(0);
     initialize_parse(argv[1],window.getTextLimit());
+cout << "TOTAL LINES " << parse_getNumLines();
     initialize_display(&window);
     engine_driver(&window);
     window.shutdown_Window();

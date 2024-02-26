@@ -20,6 +20,10 @@ using std::vector;
 using std::cout;
 using std::endl;
 
+#define TITLESCREEN 0
+#define MAINSCREEN 1
+#define SETTINGSCREEN 2
+
 /*
  * Main loop of program
  */
@@ -27,7 +31,6 @@ void engine_driver(WindowManager *window){
    SDL_Event winEvent;
    bool running = true;
 
-   WindowManager gWin = *window;
 //   console Console = display_getConsole();
    /*
       typedef struct{
@@ -50,12 +53,15 @@ void engine_driver(WindowManager *window){
    vector<SDL_Surface*> textSurfaces = display_getSurfaceText();
 
    //Draw Text
-   SDL_CreateTexture(Screen.renderer, SDL_PIXELFORMAT_RGBA8888, SDL_TEXTUREACCESS_STREAMING,gWin.getWidth(),gWin.getHeight());
+   SDL_CreateTexture(Screen.renderer, SDL_PIXELFORMAT_RGBA8888, SDL_TEXTUREACCESS_STREAMING,window->getWidth(),window->getHeight());
    //Show
    SDL_RenderPresent(Screen.renderer);
 
-   display_MainScreen_ScrollText(window); //advance text
+   display_MainScreen_ScrollTextForward(window); //advance text
 
+   int currentLine = display_getSurfaceTextIndex();
+   currentLine++;
+   currentLine--;
    //Main Driver
    while (running){
       while(SDL_PollEvent(&winEvent)){
@@ -65,9 +71,20 @@ void engine_driver(WindowManager *window){
          } else if(winEvent.type == SDL_KEYDOWN){
                   switch(winEvent.key.keysym.sym){
 	                  case SDLK_SPACE:
-                        display_MainScreen_ScrollText(window);
-
+                     case SDLK_RIGHT:
+                     case SDLK_z:
+                     case SDLK_x:
+                     case SDLK_KP_ENTER:
+                        if(display_getCurrentScreenIndex() == MAINSCREEN){ 
+                           display_MainScreen_ScrollTextForward(window);
+                           currentLine = display_getSurfaceTextIndex();
+                        } 
                    		break;
+                     case SDLK_LEFT:
+                        if(display_getCurrentScreenIndex() == MAINSCREEN){
+                           display_MainScreen_ScrollTextBackward(window);
+                           currentLine = display_getSurfaceTextIndex();
+                        }
                      default:
 		                  break;
     	      }

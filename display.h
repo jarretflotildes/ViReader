@@ -40,6 +40,8 @@ SDL_Texture *display_getBackground();
 
 std::vector<SDL_Surface*> display_getSurfaceText();
 int display_getSurfaceTextIndex();
+int display_IncrementSurfaceTextIndex();
+int display_getCurrentScreenIndex();
 
 //Setters
 void display_setSurfaceTextIndex(int index);
@@ -51,7 +53,10 @@ void display_RenderConsole(WindowManager *window);
 
 //Screen Stuff
 void display_MainScreen_RenderText(WindowManager *window);
-void display_MainScreen_ScrollText(WindowManager *window);
+int  display_MainScreen_RenderTextAtIndex(WindowManager *window, int index);
+void display_MainScreen_ScrollTextForward(WindowManager *window);
+void display_MainScreen_ScrollTextBackward(WindowManager *window);
+
 
 //Shutdown
 void display_shutdown(WindowManager *window);
