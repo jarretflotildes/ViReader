@@ -18,13 +18,16 @@ using std::vector;
 
 int NUM_LINES;
 int CharacterLimit;
+int DisplayLimit;
 int Pages;
+int CurrentPage;
 
 vector<string> TXT_FILE;
 
-void initialize_parse(char *fName,int characterLimit){
+void initialize_parse(char *fName,int characterLimit,int displayLimit){
     NUM_LINES = 0;
     CharacterLimit = characterLimit;
+    DisplayLimit = displayLimit;
 
     extract_text(fName);
 
@@ -54,10 +57,11 @@ void extract_text(char *fName){
       exit(-1);
    }
 
-   Pages = NUM_LINES/10;
-   if(Pages == 0){
-      Pages = 1;
-   }
+   double tempPages = ((double)NUM_LINES/DisplayLimit) + 1;
+   Pages = ceil(tempPages);
+   /* May need to update later so can load up previously loaded file XXX*/
+   CurrentPage = 1;
+//cout << "There are " << Pages << " Pages." << endl;
 
    file.close();
 }
@@ -256,6 +260,24 @@ int parse_getNumLines(){
 
 int parse_getPages(){
    return Pages;
+}
+
+int parse_getCurrentPage(){
+   return CurrentPage;
+}
+
+void parse_incrementPage(){
+   CurrentPage++;
+   if(CurrentPage > Pages){
+      CurrentPage = 1;
+   }
+}
+
+void parse_decrementPage(){
+   CurrentPage--;
+   if(CurrentPage == 0){
+      CurrentPage = Pages;
+   }
 }
 
 vector<string> parse_getText(){

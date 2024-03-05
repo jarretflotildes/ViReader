@@ -30,6 +30,7 @@ class WindowManager{
         text getTextSettings();
         int getTextLimit();
         int getTextOffset();
+        int getCurrentPage();
 
         void setMode(int mode);
         void setFontSize(int size);

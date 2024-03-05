@@ -8,20 +8,31 @@
 #include <vector>
 
 #include "window.h"
+#include "menuItem.h"
 
-//Screen
 typedef struct{
    SDL_Renderer *renderer;
    SDL_Texture  *text;
    SDL_Surface  *surface;
 } screen;
 
-//Console
 typedef struct{
    SDL_Surface *surfaceConsole;
    SDL_Texture *textureMessage;
-   SDL_Rect consoleRect; //rect where text displayed
+   SDL_Rect consoleRect;
 } console; 
+
+typedef struct{
+   SDL_Texture *currentPage;
+   SDL_Texture *maxPage;
+   SDL_Surface *settings;
+} mainScreen_elements;
+
+typedef struct{
+   SDL_Texture *inner;
+   SDL_Texture *outer;
+} TextFormat;
+
 
 //initializers
 void initialize_display(WindowManager *window);
@@ -29,6 +40,7 @@ void initialize_background(WindowManager *window);
 void initialize_screen(WindowManager *window);
 void initialize_console(WindowManager *window);
 void initialize_SurfaceText(WindowManager *window);
+void initialize_menuItems(WindowManager *window);
 
 //updaters
 void update_console();
@@ -50,10 +62,11 @@ void display_setSurfaceTextIndex(int index);
 //Helper functions for screen displaying
 void display_RenderBackground();
 void display_RenderConsole(WindowManager *window);
+void display_RenderMenuItems(WindowManager *window);
 
 //Screen Stuff
 void display_MainScreen_RenderText(WindowManager *window);
-int  display_MainScreen_RenderTextAtIndex(WindowManager *window, int index);
+void display_MainScreen_RenderTextAtIndex(WindowManager *window, int index,int direction);
 void display_MainScreen_ScrollTextForward(WindowManager *window);
 void display_MainScreen_ScrollTextBackward(WindowManager *window);
 

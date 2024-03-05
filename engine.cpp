@@ -59,9 +59,6 @@ void engine_driver(WindowManager *window){
 
    display_MainScreen_ScrollTextForward(window); //advance text
 
-   int currentLine = display_getSurfaceTextIndex();
-   currentLine++;
-   currentLine--;
    //Main Driver
    while (running){
       while(SDL_PollEvent(&winEvent)){
@@ -77,13 +74,11 @@ void engine_driver(WindowManager *window){
                      case SDLK_KP_ENTER:
                         if(display_getCurrentScreenIndex() == MAINSCREEN){ 
                            display_MainScreen_ScrollTextForward(window);
-                           currentLine = display_getSurfaceTextIndex();
                         } 
                    		break;
                      case SDLK_LEFT:
                         if(display_getCurrentScreenIndex() == MAINSCREEN){
                            display_MainScreen_ScrollTextBackward(window);
-                           currentLine = display_getSurfaceTextIndex();
                         }
                      default:
 		                  break;
