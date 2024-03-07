@@ -58,10 +58,15 @@ void extract_text(char *fName){
    }
 
    double tempPages = ((double)NUM_LINES/DisplayLimit) + 1;
-   Pages = ceil(tempPages);
+
+   if(DisplayLimit > NUM_LINES){
+      Pages = 1;
+   } else {
+      Pages = ceil(tempPages);
+   }
    /* May need to update later so can load up previously loaded file XXX*/
    CurrentPage = 1;
-//cout << "There are " << Pages << " Pages." << endl;
+cout << "There are " << Pages << " Pages." << endl;
 
    file.close();
 }
@@ -271,11 +276,12 @@ void parse_incrementPage(){
    if(CurrentPage > Pages){
       CurrentPage = 1;
    }
+
 }
 
 void parse_decrementPage(){
    CurrentPage--;
-   if(CurrentPage == 0){
+   if(CurrentPage <= 0){
       CurrentPage = Pages;
    }
 }

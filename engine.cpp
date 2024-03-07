@@ -16,6 +16,8 @@
 #include "display.h"
 #include "window.h"
 
+#include "parse.h"
+
 using std::vector;
 using std::cout;
 using std::endl;
@@ -57,7 +59,7 @@ void engine_driver(WindowManager *window){
    //Show
    SDL_RenderPresent(Screen.renderer);
 
-   display_MainScreen_ScrollTextForward(window); //advance text
+   display_MainScreen(window);
 
    //Main Driver
    while (running){
@@ -83,6 +85,8 @@ void engine_driver(WindowManager *window){
                      default:
 		                  break;
     	      }
+
+cout << "Current Page " << parse_getCurrentPage()<< endl;
          }
       }
    }
