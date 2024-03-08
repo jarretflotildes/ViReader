@@ -37,26 +37,6 @@ void initialize_parse(char *fName,int characterLimit,int displayLimit){
 //cout << TXT_FILE.at(i) << endl;
     }
 
-    //format_text(); //TODO
-
-}
-
-void extract_text(char *fName){
-   std::ifstream file(fName);
-   string line = "";
-
-   if(file.is_open()){
-      int i = 0;
-      while (getline(file, line)) {
-         TXT_FILE.push_back(line);
-         i++;
-      }
-        NUM_LINES = i;                                 //Assign Global Num_lines
-   } else {
-      printf("error loading text file\n");
-      exit(-1);
-   }
-
    double tempPages = ((double)NUM_LINES/DisplayLimit) + 1;
 
    if(DisplayLimit > NUM_LINES){
@@ -68,7 +48,32 @@ void extract_text(char *fName){
    /* May need to update later so can load up previously loaded file XXX*/
    CurrentPage = 1;
 
-//cout << "There are " << Pages << " Pages." << endl;
+
+
+    //format_text(); //TODO
+
+cout << "There are " << NUM_LINES << " Lines." << endl;
+cout << "There are " << Pages << " Pages." << endl;
+
+
+}
+
+void extract_text(char *fName){
+   std::ifstream file(fName);
+   string line = "";
+
+   if(file.is_open()){
+      int i = 0;
+      while (getline(file, line)) {
+         TXT_FILE.push_back(line);
+cout << line << endl;
+         i++;
+      }
+        NUM_LINES = i;                                 //Assign Global Num_lines
+   } else {
+      printf("error loading text file\n");
+      exit(-1);
+   }
 
    file.close();
 }

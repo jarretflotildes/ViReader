@@ -19,12 +19,10 @@ using std::endl;
 void driver(char *argv[]){
     WindowManager window = WindowManager(0);
     initialize_parse(argv[1],window.getTextLimit(),window.getDisplayLines());
-/*    
     initialize_display(&window);
     engine_driver(&window); 
     window.shutdown_Window();
     display_shutdown(&window);
-  */  
 }
 
 int main(int args, char *argv[]){

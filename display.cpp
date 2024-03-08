@@ -213,11 +213,8 @@ void display_MainScreen_RenderText(WindowManager *window){
 
   	    Screen.text = SDL_CreateTextureFromSurface(Screen.renderer, TextSurfaces.at(currentIndex));
 
-       if(parse_getText().at(currentIndex) != ""){
-          cout << parse_getText().at(currentIndex) << endl;
-          SDL_RenderCopy(Screen.renderer,Screen.text,NULL,&displayText);
-       } else {
-       }
+//          cout << parse_getText().at(currentIndex) << endl;
+      SDL_RenderCopy(Screen.renderer,Screen.text,NULL,&displayText);
 
        offset+= window->getTextOffset();
        currentIndex++;
