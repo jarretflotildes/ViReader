@@ -19,11 +19,12 @@ using std::endl;
 void driver(char *argv[]){
     WindowManager window = WindowManager(0);
     initialize_parse(argv[1],window.getTextLimit(),window.getDisplayLines());
-//cout << "TOTAL LINES " << parse_getNumLines();
+/*    
     initialize_display(&window);
-    engine_driver(&window);
+    engine_driver(&window); 
     window.shutdown_Window();
     display_shutdown(&window);
+  */  
 }
 
 int main(int args, char *argv[]){

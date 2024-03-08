@@ -123,7 +123,8 @@ void initialize_console(WindowManager *window){
 
 void initialize_menuItems(WindowManager *window){
    string max = std::to_string(parse_getCurrentPage()) +  " / " + std::to_string(parse_getPages());
-   SDL_Surface *surface = TTF_RenderText_Solid(window->getTextSettings().font,max.c_str(),(SDL_Color){255,255,255});
+   SDL_Surface *surface = TTF_RenderText_Blended(window->getTextSettings().font,max.c_str(),(SDL_Color){255,255,255});
+//   SDL_Surface *surface = TTF_RenderText_Solid(window->getTextSettings().font,max.c_str(),(SDL_Color){255,255,255});
    MainElements.currentPage = SDL_CreateTextureFromSurface(Screen.renderer,surface);
 }
 
@@ -133,12 +134,11 @@ void initialize_SurfaceText(WindowManager *window){
 
     for(int i = 0;i<parse_getNumLines();i++){
        string line = parse_getText().at(i);
-//       SDL_Surface *currentSurface = TTF_RenderText_Blended_Wrapped(Text.font,line.c_str(),(SDL_Color){0,0,0},60); //wraps text around
-       SDL_Surface *currentSurface = TTF_RenderText_Solid(Text.font,line.c_str(),(SDL_Color){0,0,0});
+       SDL_Surface *currentSurface = TTF_RenderUTF8_Blended(Text.font,line.c_str(),(SDL_Color){0,0,0}); //wraps text around
+//       SDL_Surface *currentSurface = TTF_RenderText_Blended(Text.font,line.c_str(),(SDL_Color){0,0,0}); //wraps text around
+//       SDL_Surface *currentSurface = TTF_RenderText_Solid(Text.font,line.c_str(),(SDL_Color){0,0,0});
        TextSurfaces.push_back(currentSurface);
     }
-
-
 }
 
 /*  Helper function for rendering certain Backgrounds
@@ -157,10 +157,7 @@ void display_RenderMenuItems(WindowManager *window){
    displayText.y = Console.consoleRect.h;
    displayText.w = Console.consoleRect.w/9;
    displayText.h = Console.consoleRect.h/9;
-SDL_RenderCopy(Screen.renderer,display_getBackground(),NULL,NULL);
    SDL_RenderCopy(Screen.renderer,MainElements.currentPage,NULL,&displayText);
-   SDL_RenderPresent(Screen.renderer);
-
 }
 
 void display_RenderConsole(WindowManager *window){
@@ -177,12 +174,11 @@ void display_RenderConsole(WindowManager *window){
 
     SDL_RenderCopy(Screen.renderer,Screen.text,NULL,&Console.consoleRect);
 
-    SDL_RenderPresent(Screen.renderer);
 }
 
 
 /* Render text starting at certain index returns index it stopped at */
-void display_MainScreen_RenderTextAtPage(WindowManager *window, int page){
+void display_MainScreen_RenderText(WindowManager *window){
 
     SDL_DestroyTexture(Screen.text);
 
@@ -190,6 +186,7 @@ void display_MainScreen_RenderTextAtPage(WindowManager *window, int page){
 
     //offsetting is necessary
    //Page 1 means first ten starting at index 0
+    int page = parse_getCurrentPage();
     page--; 
 
     int currentIndex = page * window->getDisplayLines();
@@ -199,9 +196,6 @@ void display_MainScreen_RenderTextAtPage(WindowManager *window, int page){
        currentIndex = parse_getNumLines() - currentIndex;
     }
 
-
-cout << "ATTEMPTING TO DISPLAY PAGE " << page << endl;
-
     //Display Text
     SDL_Rect displayText;
 
@@ -209,7 +203,6 @@ cout << "ATTEMPTING TO DISPLAY PAGE " << page << endl;
     int yAlign = Console.consoleRect.y/2;
 
     for(int i = 0;i<window->getDisplayLines();i++){
-
        int text_width = TextSurfaces.at(currentIndex)->w;
        int text_height = TextSurfaces.at(currentIndex)->h;
 
@@ -219,18 +212,22 @@ cout << "ATTEMPTING TO DISPLAY PAGE " << page << endl;
        displayText.h = text_height;
 
   	    Screen.text = SDL_CreateTextureFromSurface(Screen.renderer, TextSurfaces.at(currentIndex));
-cout << "PRINTING " << currentIndex << endl;
-       SDL_RenderCopy(Screen.renderer,Screen.text,NULL,&displayText);
+
+       if(parse_getText().at(currentIndex) != ""){
+          cout << parse_getText().at(currentIndex) << endl;
+          SDL_RenderCopy(Screen.renderer,Screen.text,NULL,&displayText);
+       } else {
+       }
+
        offset+= window->getTextOffset();
        currentIndex++;
- 
+
        if(currentIndex >= parse_getNumLines()){
          break;
        }
 
     }
 
-    SDL_RenderPresent(Screen.renderer);
 }
 
 void display_MainScreen(WindowManager *window){
@@ -239,34 +236,33 @@ void display_MainScreen(WindowManager *window){
     display_RenderBackground();
     display_RenderMenuItems(window);
     display_RenderConsole(window);
-    display_MainScreen_RenderTextAtPage(window,parse_getCurrentPage());
+    display_MainScreen_RenderText(window);
+    SDL_RenderPresent(Screen.renderer);
 }
 
 /*
    Renders background, console, and advances text
 */
 void display_MainScreen_ScrollTextForward(WindowManager *window){
-parse_incrementPage();
-string max = std::to_string(parse_getCurrentPage()) +  " / " + std::to_string(parse_getPages());
-SDL_Surface *surface = TTF_RenderText_Solid(window->getTextSettings().font,max.c_str(),(SDL_Color){255,255,255});
-MainElements.currentPage = SDL_CreateTextureFromSurface(Screen.renderer,surface);
-cout << parse_getCurrentPage() << endl;
+    parse_incrementPage();
+    string max = std::to_string(parse_getCurrentPage()) +  " / " + std::to_string(parse_getPages());
+    SDL_Surface *surface = TTF_RenderText_Blended(window->getTextSettings().font,max.c_str(),(SDL_Color){255,255,255});
+    MainElements.currentPage = SDL_CreateTextureFromSurface(Screen.renderer,surface);
 
     SDL_RenderClear(Screen.renderer);
     SDL_DestroyTexture(Screen.text);
     display_RenderBackground();
     display_RenderMenuItems(window);
     display_RenderConsole(window);
-    display_MainScreen_RenderTextAtPage(window,parse_getCurrentPage());
+    display_MainScreen_RenderText(window);
+    SDL_RenderPresent(Screen.renderer);
 
 }
 
 void display_MainScreen_ScrollTextBackward(WindowManager *window){
     parse_decrementPage();
-
-cout << "page is " << parse_getCurrentPage() << endl;
     string max = std::to_string(parse_getCurrentPage()) +  " / " + std::to_string(parse_getPages());
-    SDL_Surface *surface = TTF_RenderText_Solid(window->getTextSettings().font,max.c_str(),(SDL_Color){255,255,255});
+    SDL_Surface *surface = TTF_RenderText_Blended(window->getTextSettings().font,max.c_str(),(SDL_Color){255,255,255});
     MainElements.currentPage = SDL_CreateTextureFromSurface(Screen.renderer,surface);
     
     SDL_RenderClear(Screen.renderer);
@@ -275,7 +271,9 @@ cout << "page is " << parse_getCurrentPage() << endl;
     display_RenderMenuItems(window);
     display_RenderConsole(window);
 
-    display_MainScreen_RenderTextAtPage(window,parse_getCurrentPage());
+    display_MainScreen_RenderText(window);
+    SDL_RenderPresent(Screen.renderer);
+
     
 }
 

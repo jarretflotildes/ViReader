@@ -64,9 +64,11 @@ void extract_text(char *fName){
    } else {
       Pages = ceil(tempPages);
    }
+
    /* May need to update later so can load up previously loaded file XXX*/
    CurrentPage = 1;
-cout << "There are " << Pages << " Pages." << endl;
+
+//cout << "There are " << Pages << " Pages." << endl;
 
    file.close();
 }
@@ -91,6 +93,10 @@ string parse_CutLine(int i){
    string line = TXT_FILE.at(i);
    int characterLimit = CharacterLimit;
 
+   char *buffer = (char*)line.c_str();
+   buffer[strcspn(line.c_str(), "\r\n")] = 0;
+   line.assign(buffer);
+
    if((int)line.length() > characterLimit){
       string firstHalf = line.substr(0,characterLimit);
       string secondHalf = line.substr(characterLimit,line.length());
@@ -109,7 +115,6 @@ string parse_CutLine(int i){
       } else {
          line = cutLine_Case2(line,firstHalf,secondHalf,firstHalf_lastWord,i);
       }
-
    }
 
    return line;
@@ -152,9 +157,14 @@ cout << "Original       : " << line << endl;
    if(line != (firstHalf + firstHalf_lastWord + secondHalf)){
         firstHalf_lastWord = "";
    }
+/*
+   char *buffer = (char*)secondHalf.c_str();
+   buffer[strcspn(secondHalf.c_str(), "\r\n")] = 0; //remove CR, CL, etc
+   secondHalf.assign(buffer);
+*/
 
    //remove any special characters at end of string
-   if(secondHalf.back() == '\n' || secondHalf.back() == '\r'){ 
+   if(secondHalf.back() == '\n'){ 
       //cout << "removing " << int(secondHalf.at(secondHalf.length()-1)) << endl;;
       secondHalf.erase(secondHalf.length()-1);
    }
@@ -162,7 +172,7 @@ cout << "Original       : " << line << endl;
    if(i+1 < NUM_LINES){
       string next = TXT_FILE.at(i+1);
       char nextCharacter = next.at(0);
-
+ 
       //Append to next line ONLY when next line is not new paragraph/dialogue/whatever
       if(nextCharacter != '\r' && //enter
          nextCharacter != '\n' && //new line 

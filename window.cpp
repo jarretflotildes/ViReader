@@ -37,13 +37,7 @@ WindowManager::WindowManager(){
    }
 
    // Load font file
-   #ifdef __linux__
-   textSettings.font = TTF_OpenFont("/usr/share/fonts/truetype/ubuntu/Ubuntu-B.ttf", textSettings.fontSize);
-   #elif __APPLE__
-   textSettings.font = TTF_OpenFont("/Library/Fonts/Arial.ttf", textSettings.fontSize);
-   #elif _WIN32
-   textSettings.font = TTF_OpenFont("C:/Windows/Fonts/Calibri.ttf", textSettings.fontSize);
-   #endif
+   textSettings.font = TTF_OpenFont("./FONTS/BIZ-UDGothicB.ttc", textSettings.fontSize);
 	
    if (textSettings.font == NULL) { 
       printf("error loading font file: %s\n", TTF_GetError());
@@ -77,14 +71,7 @@ WindowManager::WindowManager(int mode){
    }
 
    // Load font file
-   #ifdef __linux__
-   textSettings.font = TTF_OpenFont("/usr/share/fonts/truetype/ubuntu/Ubuntu-B.ttf", textSettings.fontSize);
-   #elif __APPLE__
-   textSettings.font = TTF_OpenFont("/Library/Fonts/Arial.ttf", textSettings.fontSize);
-   #elif _WIN32
-   textSettings.font = TTF_OpenFont("C:/Windows/Fonts/CORPORATE-MINCHO-VER2.ttf", textSettings.fontSize);
-   //textSettings.font = TTF_OpenFont("C:/Windows/Fonts/Arial.ttf",textSettings.fontSize);
-   #endif
+   textSettings.font = TTF_OpenFont("./FONTS/BIZ-UDGothicB.ttc", textSettings.fontSize);
 	
    if (textSettings.font == NULL) { 
       printf("error loading font file: %s\n", TTF_GetError());
@@ -122,9 +109,6 @@ void WindowManager::setCurrentScaleMode(int mode){
 
    /* Values to set that are the same no matter how large window is */
 
-   //Text Color for System
-   textSettings.font = NULL;
-
    //White text
    textSettings.fontColor.r = 255; 
    textSettings.fontColor.g = 255; 
@@ -141,7 +125,7 @@ void WindowManager::setCurrentScaleMode(int mode){
         case 0: 
             width = 1200;
             height = 720;
-            textCharacterLimit = 55;
+            textCharacterLimit = 50;
             textHeightOffset = 60;
             displayLines = 10;
             textSettings.fontSize = 40;
@@ -150,7 +134,7 @@ void WindowManager::setCurrentScaleMode(int mode){
         default:
             width = 1200;
             height = 720;
-            textCharacterLimit = 55;
+            textCharacterLimit = 50;
             textHeightOffset = 60;
             displayLines = 10;
             textSettings.fontSize = 40;

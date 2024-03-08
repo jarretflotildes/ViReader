@@ -86,7 +86,6 @@ void engine_driver(WindowManager *window){
 		                  break;
     	      }
 
-cout << "Current Page " << parse_getCurrentPage()<< endl;
          }
       }
    }

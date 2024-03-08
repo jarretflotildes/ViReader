@@ -51,6 +51,7 @@ console display_getConsole();
 SDL_Texture *display_getBackground();
 
 std::vector<SDL_Surface*> display_getSurfaceText();
+int display_getCurrentScreenIndex();
 
 //Setters
 void display_setSurfaceTextIndex(int index);
@@ -62,7 +63,7 @@ void display_RenderConsole(WindowManager *window);
 void display_RenderMenuItems(WindowManager *window);
 
 //Screen Stuff
-void display_MainScreen_RenderTextAtPage(WindowManager *window, int page);
+void display_MainScreen_RenderText(WindowManager *window);
 void display_MainScreen(WindowManager *window);
 void display_MainScreen_ScrollTextForward(WindowManager *window);
 void display_MainScreen_ScrollTextBackward(WindowManager *window);
