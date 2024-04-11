@@ -7,7 +7,7 @@
 #include "engine.h"
 #include "window.h"
 
-#include <chrono> //XXX REMOVE IN WORKING VERSIONS
+#include <chrono> //For testing speeds of algorithms
 
 #include <string>
 

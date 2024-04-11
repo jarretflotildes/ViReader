@@ -185,7 +185,7 @@ void display_MainScreen_RenderText(WindowManager *window){
     int offset = 0;
 
     //offsetting is necessary
-   //Page 1 means first ten starting at index 0
+   //Page 1 means first display lines ex 10 starting at index 0
     int page = parse_getCurrentPage();
     page--; 
 
