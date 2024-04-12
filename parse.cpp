@@ -50,11 +50,11 @@ void initialize_parse(char *fName,int characterLimit,int displayLimit){
 
 
 
-    //format_text(); //TODO
-
+    //format_text(); //TODO: maybe don't need
+/*
 cout << "There are " << NUM_LINES << " Lines." << endl;
 cout << "There are " << Pages << " Pages." << endl;
-
+*/
 
 }
 
@@ -66,7 +66,7 @@ void extract_text(char *fName){
       int i = 0;
       while (getline(file, line)) {
          TXT_FILE.push_back(line);
-cout << line << endl;
+//cout << line << endl;
          i++;
       }
         NUM_LINES = i;                                 //Assign Global Num_lines
