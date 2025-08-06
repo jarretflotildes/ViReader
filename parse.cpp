@@ -34,10 +34,14 @@ void initialize_parse(char *fName,int characterLimit,int displayLimit){
     //FORMAT TEXT
     for(int i = 0;i<parse_getNumLines();i++){
          parse_CutLine(i);
-//cout << TXT_FILE.at(i) << endl;
+cout << TXT_FILE.at(i) << endl;
     }
 
-   double tempPages = ((double)NUM_LINES/DisplayLimit) + 1;
+    format_text(); //TODO: maybe don't need
+
+//   double tempPages = ((double)NUM_LINES/DisplayLimit) + 1;
+   double tempPages = ((double)NUM_LINES/DisplayLimit);
+
 
    if(DisplayLimit > NUM_LINES){
       Pages = 1;
@@ -48,13 +52,11 @@ void initialize_parse(char *fName,int characterLimit,int displayLimit){
    /* May need to update later so can load up previously loaded file XXX*/
    CurrentPage = 1;
 
-
-
-    //format_text(); //TODO: maybe don't need
 /*
 cout << "There are " << NUM_LINES << " Lines." << endl;
 cout << "There are " << Pages << " Pages." << endl;
 */
+   cout << "Parse Initialized Successfully..." << endl;
 
 }
 
@@ -81,8 +83,19 @@ void extract_text(char *fName){
    Read Text and format into proper format
       Remove all special characters
 */
-void formatText(){
-//Implement this XXX
+void format_text(){  
+    for (auto& line : TXT_FILE) {
+        line.erase(std::remove(line.begin(), line.end(), '\r'), line.end());
+    }
+/*
+  for (auto& line : TXT_FILE) {
+        // Remove trailing \r and \n characters
+        while (!line.empty() && (line.back() == '\r' || line.back() == '\n')) {
+            line.pop_back();
+//            cout << line << endl;
+        }
+    }
+        */
 }
 
 /*

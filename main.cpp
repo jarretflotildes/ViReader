@@ -16,27 +16,20 @@
 using std::cout;
 using std::endl;
 
-void driver(char *argv[]){
-    WindowManager window = WindowManager(0);
-    initialize_parse(argv[1],window.getTextLimit(),window.getDisplayLines());
-    initialize_display(&window);
-    engine_driver(&window); 
-    window.shutdown_Window();
-    display_shutdown(&window);
-}
-
-int main(int args, char *argv[]){
-cout << "STARTING PROGRAM..." << endl;
-    /*
+void test_parse(char *argv[]){
     using std::chrono::high_resolution_clock;
     using std::chrono::duration_cast;
     using std::chrono::duration;
     using std::chrono::milliseconds;
 
     auto t1 = high_resolution_clock::now();
-*/
-driver(argv);
-/*
+
+    int textCharacterLimit = 50;
+    int displayLines = 10;
+
+    initialize_parse(argv[1],textCharacterLimit,displayLines);
+    print_file();
+
     auto t2 = high_resolution_clock::now();
 
     // Getting number of milliseconds as an integer.
@@ -46,7 +39,28 @@ driver(argv);
     duration<double, std::milli> ms_double = t2 - t1;
 
     std::cout << std::endl << "IT TOOK " << ms_int.count() << "M/S TO COMPLETE\n";
-*/
+
+}
+
+void driver(char *argv[]){
+    WindowManager window = WindowManager(0);
+    initialize_parse(argv[1],window.getTextLimit(),window.getDisplayLines());
+    initialize_display(&window);
+    engine_driver(&window); 
+
+    window.shutdown_Window();
+    display_shutdown(&window);
+}
+
+int main(int args, char *argv[]){
+    if(args != 2){
+        cout << "Need one file!" << endl;
+        return -1;
+    }
+cout << "STARTING PROGRAM..." << endl;
+    driver(argv);
+    //test_parse(argv);
+
 cout << "SHUTTING DOWN..." << endl;
     return EXIT_SUCCESS;
 

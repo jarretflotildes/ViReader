@@ -30,6 +30,8 @@ using std::endl;
  * Main loop of program
  */
 void engine_driver(WindowManager *window){
+   cout << "Starting Engine..." << endl;
+
    SDL_Event winEvent;
    bool running = true;
 

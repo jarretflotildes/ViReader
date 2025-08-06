@@ -66,6 +66,7 @@ void initialize_display(WindowManager *window){
     initialize_console(window);
     initialize_SurfaceText(window);
     initialize_menuItems(window);
+    cout << "Display initialized Successfully..." << endl;
 }
 
 void initialize_screen(WindowManager *window){
@@ -134,6 +135,9 @@ void initialize_SurfaceText(WindowManager *window){
 
     for(int i = 0;i<parse_getNumLines();i++){
        string line = parse_getText().at(i);
+       if(line.empty()) {
+            line = " ";
+       }
        SDL_Surface *currentSurface = TTF_RenderUTF8_Blended(Text.font,line.c_str(),(SDL_Color){0,0,0}); //wraps text around
 //       SDL_Surface *currentSurface = TTF_RenderText_Blended(Text.font,line.c_str(),(SDL_Color){0,0,0}); //wraps text around
 //       SDL_Surface *currentSurface = TTF_RenderText_Solid(Text.font,line.c_str(),(SDL_Color){0,0,0});
