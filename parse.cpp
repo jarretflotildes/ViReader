@@ -34,7 +34,7 @@ void initialize_parse(char *fName,int characterLimit,int displayLimit){
     //FORMAT TEXT
     for(int i = 0;i<parse_getNumLines();i++){
          parse_CutLine(i);
-cout << TXT_FILE.at(i) << endl;
+//cout << TXT_FILE.at(i) << endl;
     }
 
     format_text(); //TODO: maybe don't need
@@ -42,8 +42,9 @@ cout << TXT_FILE.at(i) << endl;
 //   double tempPages = ((double)NUM_LINES/DisplayLimit) + 1;
    double tempPages = ((double)NUM_LINES/DisplayLimit);
 
-
    if(DisplayLimit > NUM_LINES){
+      Pages = 1;
+   } else if(tempPages == 0){
       Pages = 1;
    } else {
       Pages = ceil(tempPages);
@@ -71,7 +72,12 @@ void extract_text(char *fName){
 //cout << line << endl;
          i++;
       }
-        NUM_LINES = i;                                 //Assign Global Num_lines
+cout << NUM_LINES << endl;
+      NUM_LINES = i;                                 //Assign Global Num_lines
+      if(NUM_LINES == 0){
+         TXT_FILE.push_back(" ");
+         NUM_LINES = 1;
+      }
    } else {
       printf("error loading text file\n");
       exit(-1);

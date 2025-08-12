@@ -45,6 +45,7 @@ void test_parse(char *argv[]){
 void driver(char *argv[]){
     WindowManager window = WindowManager(0);
     initialize_parse(argv[1],window.getTextLimit(),window.getDisplayLines());
+
     initialize_display(&window);
     engine_driver(&window); 
 
