@@ -24,6 +24,13 @@ int CurrentPage;
 
 vector<string> TXT_FILE;
 
+/**
+ * @brief initialize vector TXT_FILE to fName
+ * 
+ * @param fname name of file to open
+ * @param characterLimit number of character allowed specified by window.textCharacterLimit
+ * @param displayLimit  number of lines showed on each page specified by window.displayLines 
+ */
 void initialize_parse(char *fName,int characterLimit,int displayLimit){
     NUM_LINES = 0;
     CharacterLimit = characterLimit;
@@ -37,7 +44,7 @@ void initialize_parse(char *fName,int characterLimit,int displayLimit){
 //cout << TXT_FILE.at(i) << endl;
     }
 
-    format_text(); //TODO: maybe don't need
+    format_text();
 
 //   double tempPages = ((double)NUM_LINES/DisplayLimit) + 1;
    double tempPages = ((double)NUM_LINES/DisplayLimit);
@@ -61,6 +68,12 @@ cout << "There are " << Pages << " Pages." << endl;
 
 }
 
+
+/**
+ * @brief Extract text from file and input contents into vector TXT_FILE
+ * 
+ * @param fName - name of file
+ */
 void extract_text(char *fName){
    std::ifstream file(fName);
    string line = "";
@@ -74,6 +87,8 @@ void extract_text(char *fName){
       }
 cout << NUM_LINES << endl;
       NUM_LINES = i;                                 //Assign Global Num_lines
+
+      //Empty file
       if(NUM_LINES == 0){
          TXT_FILE.push_back(" ");
          NUM_LINES = 1;
@@ -87,7 +102,7 @@ cout << NUM_LINES << endl;
 }
 /*
    Read Text and format into proper format
-      Remove all special characters
+   Remove all special characters from TXT_FILE
 */
 void format_text(){  
     for (auto& line : TXT_FILE) {
@@ -104,14 +119,15 @@ void format_text(){
         */
 }
 
-/*
+/** 
    Cut current string from table into proper format to display on screen
    Limit current string to up to character limit
       3 cases 
       1) Last word in first half < character limit
       2) Last word in first half >= character limit 
       3) String is already fine
-*/
+   @param i - line of vector
+**/
 string parse_CutLine(int i){
 
    string line = TXT_FILE.at(i);
@@ -144,12 +160,12 @@ string parse_CutLine(int i){
    return line;
 }
 
-/*
+/** 
    Last word in first half < character limit
       - does nothing if secondhalf is empty
       - Removes any leftover letters from first half 
       - Returns formatted firsthalf while updating/adding next value in table
-*/
+**/
 string cutLine_Case1(string line, string firstHalf, string secondHalf, string firstHalf_lastWord,int i){
    //No need to do anything else if second half is empty
    if(secondHalf.empty() == true){
@@ -196,14 +212,12 @@ cout << "Original       : " << line << endl;
    if(i+1 < NUM_LINES){
       string next = TXT_FILE.at(i+1);
       char nextCharacter = next.at(0);
- 
       //Append to next line ONLY when next line is not new paragraph/dialogue/whatever
       if(nextCharacter != '\r' && //enter
          nextCharacter != '\n' && //new line 
          nextCharacter != '\v') { //vertical tab
             string newLine = firstHalf_lastWord + secondHalf + " " + TXT_FILE.at(i+1);
             TXT_FILE.at(i+1) = newLine;
-
          } else{
             string newLine = firstHalf_lastWord + secondHalf;
             TXT_FILE.insert(TXT_FILE.begin()+i+1,newLine);
