@@ -61,6 +61,7 @@ void display_setSurfaceTextIndex(int index);
 void display_RenderBackground();
 void display_RenderConsole(WindowManager *window);
 void display_RenderMenuItems(WindowManager *window);
+SDL_Surface *display_createTextSurface(WindowManager *window,int page);
 
 //Screen Stuff
 void display_MainScreen_RenderText(WindowManager *window);

@@ -64,7 +64,7 @@ void initialize_display(WindowManager *window){
     //MAINSCREEN
     initialize_background(window);
     initialize_console(window);
-    initialize_SurfaceText(window);
+ //   initialize_SurfaceText(window);
     initialize_menuItems(window);
     cout << "Display initialized Successfully..." << endl;
 }
@@ -99,6 +99,8 @@ void initialize_background(WindowManager *window){
    if(!(Background = SDL_CreateTextureFromSurface(Screen.renderer,surface))){
       cout << "Failed to make background" << endl;
    }
+
+   SDL_FreeSurface(surface);
    //Darken
    SDL_SetTextureColorMod(Background,170,170,170);
    //Set Transparency
@@ -127,10 +129,10 @@ void initialize_menuItems(WindowManager *window){
    SDL_Surface *surface = TTF_RenderText_Blended(window->getTextSettings().font,max.c_str(),(SDL_Color){255,255,255});
 //   SDL_Surface *surface = TTF_RenderText_Solid(window->getTextSettings().font,max.c_str(),(SDL_Color){255,255,255});
    MainElements.currentPage = SDL_CreateTextureFromSurface(Screen.renderer,surface);
+   SDL_FreeSurface(surface);
 }
 
 void initialize_SurfaceText(WindowManager *window){
-
     text Text = window->getTextSettings();
 
     for(int i = 0;i<parse_getNumLines();i++){
@@ -144,6 +146,22 @@ void initialize_SurfaceText(WindowManager *window){
        TextSurfaces.push_back(currentSurface);
     }
 }
+
+SDL_Surface *display_createTextSurface(WindowManager *window,int page){
+    text Text = window->getTextSettings();
+    string line = parse_getText().at(page);
+    if(line.empty()) {
+      line = " ";
+    }
+       SDL_Surface *currentSurface = TTF_RenderUTF8_Blended(Text.font,line.c_str(),(SDL_Color){0,0,0}); //wraps text around
+//       SDL_Surface *currentSurface = TTF_RenderText_Blended(Text.font,line.c_str(),(SDL_Color){0,0,0}); //wraps text around
+//       SDL_Surface *currentSurface = TTF_RenderText_Solid(Text.font,line.c_str(),(SDL_Color){0,0,0});
+    return currentSurface;
+}
+
+
+
+
 
 /*  Helper function for rendering certain Backgrounds
     TODO Expland role to accept int and render according to what background
@@ -177,19 +195,19 @@ void display_RenderConsole(WindowManager *window){
 
 
     SDL_RenderCopy(Screen.renderer,Screen.text,NULL,&Console.consoleRect);
-
 }
 
 
 /* Render text starting at certain index returns index it stopped at */
 void display_MainScreen_RenderText(WindowManager *window){
-
-    SDL_DestroyTexture(Screen.text);
+    if(Screen.text){
+      SDL_DestroyTexture(Screen.text);
+      Screen.text = NULL;
+    }
 
     int offset = 0;
 
-    //offsetting is necessary
-   //Page 1 means first display lines ex 10 starting at index 0
+    //offsetting is necessary Page 1 means first display lines ex 10 starting at index 0
     int page = parse_getCurrentPage();
     page--; 
 
@@ -207,18 +225,23 @@ void display_MainScreen_RenderText(WindowManager *window){
     int yAlign = Console.consoleRect.y/2;
 
     for(int i = 0;i<window->getDisplayLines();i++){
-       int text_width = TextSurfaces.at(currentIndex)->w;
-       int text_height = TextSurfaces.at(currentIndex)->h;
+       SDL_Surface *currentLine = display_createTextSurface(window,currentIndex);
+       int text_width = currentLine->w;
+       int text_height = currentLine->h;
 
        displayText.x = Console.consoleRect.x + xAlign;
        displayText.y = Console.consoleRect.y + yAlign + offset;
        displayText.w = text_width;
        displayText.h = text_height;
 
-  	    Screen.text = SDL_CreateTextureFromSurface(Screen.renderer, TextSurfaces.at(currentIndex));
+       //Testing
+  	    Screen.text = SDL_CreateTextureFromSurface(Screen.renderer,currentLine);
 
-//          cout << parse_getText().at(currentIndex) << endl;
-      SDL_RenderCopy(Screen.renderer,Screen.text,NULL,&displayText);
+       SDL_RenderCopy(Screen.renderer,Screen.text,NULL,&displayText);
+
+       //Memory
+       SDL_DestroyTexture(Screen.text);
+       SDL_FreeSurface(currentLine);
 
        offset+= window->getTextOffset();
        currentIndex++;
@@ -257,7 +280,6 @@ void display_MainScreen_ScrollTextForward(WindowManager *window){
     display_RenderConsole(window);
     display_MainScreen_RenderText(window);
     SDL_RenderPresent(Screen.renderer);
-
 }
 
 void display_MainScreen_ScrollTextBackward(WindowManager *window){
@@ -274,8 +296,6 @@ void display_MainScreen_ScrollTextBackward(WindowManager *window){
 
     display_MainScreen_RenderText(window);
     SDL_RenderPresent(Screen.renderer);
-
-    
 }
 
 screen display_getScreen(){
@@ -300,9 +320,6 @@ int display_getCurrentScreenIndex(){
 
 
 void display_shutdown(WindowManager *window){
-   //Font
-   TTF_Quit();
-
    //Screen
    SDL_DestroyRenderer(Screen.renderer);
 
@@ -314,9 +331,10 @@ void display_shutdown(WindowManager *window){
    SDL_DestroyTexture(MainElements.currentPage);
 
    //Text
-   for(int i = 0;i<parse_getNumLines();i++){
-        SDL_FreeSurface(TextSurfaces.at(i));
-   }
-
+//   for(int i = 0;i<parse_getNumLines();i++){
+//        SDL_FreeSurface(TextSurfaces.at(i));
+//   }
+   //Font
+   TTF_Quit();
    SDL_Quit();
 }

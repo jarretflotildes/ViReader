@@ -47,8 +47,8 @@ void driver(char *argv[]){
     initialize_parse(argv[1],window.getTextLimit(),window.getDisplayLines());
 
     initialize_display(&window);
+   // window.currentText = display_createTextSurface(&window,1);
     engine_driver(&window); 
-
     window.shutdown_Window();
     display_shutdown(&window);
 }
@@ -58,11 +58,10 @@ int main(int args, char *argv[]){
         cout << "Need one file!" << endl;
         return -1;
     }
-cout << "STARTING PROGRAM..." << endl;
+    cout << "STARTING PROGRAM..." << endl;
     driver(argv);
-    //test_parse(argv);
-
-cout << "SHUTTING DOWN..." << endl;
+//    test_parse(argv);
+    cout << "SHUTTING DOWN..." << endl;
     return EXIT_SUCCESS;
 
 }
