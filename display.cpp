@@ -148,10 +148,6 @@ SDL_Surface *display_createTextSurface(WindowManager *window,int page){
     return currentSurface;
 }
 
-
-
-
-
 /*  Helper function for rendering certain Backgrounds
     TODO Expland role to accept int and render according to what background
   */
@@ -225,7 +221,6 @@ void display_MainScreen_RenderText(WindowManager *window){
 
        //Testing
   	    Screen.text = SDL_CreateTextureFromSurface(Screen.renderer,currentLine);
-
        SDL_RenderCopy(Screen.renderer,Screen.text,NULL,&displayText);
 
        //Memory
@@ -259,8 +254,11 @@ void display_MainScreen(WindowManager *window){
 void display_MainScreen_ScrollTextForward(WindowManager *window){
     parse_incrementPage();
     string max = std::to_string(parse_getCurrentPage()) +  " / " + std::to_string(parse_getPages());
-    SDL_Surface *surface = TTF_RenderText_Blended(window->getTextSettings().font,max.c_str(),(SDL_Color){255,255,255});
-    MainElements.currentPage = SDL_CreateTextureFromSurface(Screen.renderer,surface);
+    SDL_Surface *page_surface = TTF_RenderText_Blended(window->getTextSettings().font,max.c_str(),(SDL_Color){255,255,255});
+    if(MainElements.currentPage){
+        SDL_DestroyTexture(MainElements.currentPage);
+    }
+    MainElements.currentPage = SDL_CreateTextureFromSurface(Screen.renderer,page_surface);
     SDL_RenderClear(Screen.renderer);
     SDL_DestroyTexture(Screen.text);
     display_RenderBackground();
@@ -269,14 +267,17 @@ void display_MainScreen_ScrollTextForward(WindowManager *window){
     display_MainScreen_RenderText(window);
     SDL_RenderPresent(Screen.renderer);
     //Free
-    SDL_FreeSurface(surface); 
+    SDL_FreeSurface(page_surface); 
 }
 
 void display_MainScreen_ScrollTextBackward(WindowManager *window){
     parse_decrementPage();
     string max = std::to_string(parse_getCurrentPage()) +  " / " + std::to_string(parse_getPages());
-    SDL_Surface *surface = TTF_RenderText_Blended(window->getTextSettings().font,max.c_str(),(SDL_Color){255,255,255});
-    MainElements.currentPage = SDL_CreateTextureFromSurface(Screen.renderer,surface);
+    SDL_Surface *page_surface = TTF_RenderText_Blended(window->getTextSettings().font,max.c_str(),(SDL_Color){255,255,255});
+   if(MainElements.currentPage){
+        SDL_DestroyTexture(MainElements.currentPage);
+    }
+    MainElements.currentPage = SDL_CreateTextureFromSurface(Screen.renderer,page_surface);
     
     SDL_RenderClear(Screen.renderer);
     SDL_DestroyTexture(Screen.text);
@@ -287,7 +288,7 @@ void display_MainScreen_ScrollTextBackward(WindowManager *window){
     display_MainScreen_RenderText(window);
     SDL_RenderPresent(Screen.renderer);
     //Free
-    SDL_FreeSurface(surface); 
+    SDL_FreeSurface(page_surface); 
 }
 
 screen display_getScreen(){

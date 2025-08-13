@@ -32,7 +32,7 @@ int test_basic_sdl(){
 /**
  * @brief Test parse
  * 
- * @param argv 
+ * @param argv input file
  */
 void test_parse(char *argv[]){
     using std::chrono::high_resolution_clock;
@@ -54,9 +54,7 @@ void test_parse(char *argv[]){
 
 void test_display_init(){
     WindowManager window = WindowManager(0);
-
     initialize_display(&window);
-    
     display_shutdown(&window);
     window.shutdown_Window();
 }

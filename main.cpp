@@ -17,21 +17,21 @@
 using std::cout;
 using std::endl;
 
+//One line to change between prod and testing
+#define TESTING 1
 
 void driver(char *argv[]){
     WindowManager window = WindowManager(0);
     initialize_parse(argv[1],window.getTextLimit(),window.getDisplayLines());
-
-//    initialize_display(&window);
-   // window.currentText = display_createTextSurface(&window,1);
-//    engine_driver(&window); 
+    initialize_display(&window);
+    engine_driver(&window); 
     window.shutdown_Window();
     display_shutdown(&window);
 }
 
 void test(char *argv[]){
-    test_basic_sdl();
-    //test_parse(argv);
+//    test_basic_sdl();
+    test_parse(argv);
     //test_display_init();
     //test_display_scrollForward(argv);
     //test_window();
@@ -43,8 +43,12 @@ int main(int args, char *argv[]){
         return -1;
     }
     cout << "STARTING PROGRAM..." << endl;
-//    driver(argv);
-    test(argv);
+
+    if(TESTING){
+        test(argv);
+    } else {
+        driver(argv);
+    }
     cout << "SHUTTING DOWN..." << endl;
     return EXIT_SUCCESS;
 

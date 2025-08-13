@@ -24,6 +24,14 @@ int CurrentPage;
 
 vector<string> TXT_FILE;
 
+//XXX Fix parsing for foreign characters
+//In［＃］：入力者注　主に外字の説明や、傍点の位置の指定
+//　　　（数字は、JIS X 0213の面区点番号またはUnicode、底本のページと行数）
+//Out String [11] = ［＃］：入力者注　主に外字の説明-
+//String [12] = 、傍点の位置の指定
+//XXX Missing や, '、' on new line instead of same 
+
+
 /**
  * @brief initialize vector TXT_FILE to fName
  * 
@@ -85,7 +93,7 @@ void extract_text(char *fName){
 //cout << line << endl;
          i++;
       }
-cout << NUM_LINES << endl;
+
       NUM_LINES = i;                                 //Assign Global Num_lines
 
       //Empty file
@@ -257,6 +265,7 @@ string cutLine_Case2(string line, string firstHalf, string secondHalf, string fi
       char nextCharacter = next.at(0);
 
       //Append to next line ONLY when next line is not new paragraph/dialogue/whatever
+      /**/
       if(nextCharacter != '\r' && //enter
          nextCharacter != '\n' && //new line 
          nextCharacter != '\v') { //vertical tab

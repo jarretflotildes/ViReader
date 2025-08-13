@@ -45,7 +45,6 @@ class WindowManager{
 
         text textSettings;
 
-
 };
 
 #endif
