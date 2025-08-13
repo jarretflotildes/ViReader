@@ -2,42 +2,55 @@ CC := g++
 
 # Base flags
 BASE_CFLAGS = $(shell sdl2-config --cflags) -Wall -Werror -lm -g
-LDLIBS += -lSDL2 -lSDL2_image -lSDL2_ttf -lSDL2_gfx
+BASE_LDLIBS = -lSDL2 -lSDL2_image -lSDL2_ttf -lSDL2_gfx
 
-# Default build (debug mode)
+# Default build flags
 CFLAGS = $(BASE_CFLAGS)
+LDLIBS = $(BASE_LDLIBS)
 
 # Memory debugging variants
 DEBUG_CFLAGS = $(BASE_CFLAGS) -DDEBUG -O0 -g3
 ASAN_CFLAGS = $(BASE_CFLAGS) -fsanitize=address -fsanitize=undefined -fno-omit-frame-pointer -O1
+ASAN_LDLIBS = $(BASE_LDLIBS) -fsanitize=address -fsanitize=undefined
 MSAN_CFLAGS = $(BASE_CFLAGS) -fsanitize=memory -fno-omit-frame-pointer -O1
+MSAN_LDLIBS = $(BASE_LDLIBS) -fsanitize=memory
 
-SOURCES = main.cpp parse.cpp display.cpp engine.cpp window.cpp menuItem.cpp
-OBJECTS = main.o parse.o display.o engine.o window.o menuItem.o
+SOURCES = main.cpp parse.cpp display.cpp engine.cpp window.cpp menuItem.cpp test.cpp
+OBJECTS = main.o parse.o display.o engine.o window.o menuItem.o test.o
 
 # Default target
 reader: $(OBJECTS)
 	$(CC) $(CFLAGS) -o reader $(OBJECTS) $(LDLIBS)
 
 # Debug build
-debug: CFLAGS = $(DEBUG_CFLAGS)
-debug: reader
+debug: 
+	$(MAKE) reader CFLAGS="$(DEBUG_CFLAGS)"
 
-# AddressSanitizer build
-asan: CFLAGS = $(ASAN_CFLAGS)
-asan: LDLIBS += -fsanitize=address -fsanitize=undefined
+# AddressSanitizer build (recommended for SDL2 leak detection)
 asan: reader-asan
 
-reader-asan: $(OBJECTS)
-	$(CC) $(CFLAGS) -o reader-asan $(OBJECTS) $(LDLIBS)
+reader-asan: $(SOURCES)
+	$(CC) $(ASAN_CFLAGS) -c main.cpp -o main.o
+	$(CC) $(ASAN_CFLAGS) -c parse.cpp -o parse.o
+	$(CC) $(ASAN_CFLAGS) -c display.cpp -o display.o
+	$(CC) $(ASAN_CFLAGS) -c engine.cpp -o engine.o
+	$(CC) $(ASAN_CFLAGS) -c window.cpp -o window.o
+	$(CC) $(ASAN_CFLAGS) -c menuItem.cpp -o menuItem.o
+	$(CC) $(ASAN_CFLAGS) -c test.cpp -o test.o
+	$(CC) $(ASAN_CFLAGS) -o reader-asan $(OBJECTS) $(ASAN_LDLIBS)
 
 # MemorySanitizer build (more thorough but slower)
-msan: CFLAGS = $(MSAN_CFLAGS)
-msan: LDLIBS += -fsanitize=memory
 msan: reader-msan
 
-reader-msan: $(OBJECTS)
-	$(CC) $(CFLAGS) -o reader-msan $(OBJECTS) $(LDLIBS)
+reader-msan: $(SOURCES)
+	$(CC) $(MSAN_CFLAGS) -c main.cpp -o main.o
+	$(CC) $(MSAN_CFLAGS) -c parse.cpp -o parse.o
+	$(CC) $(MSAN_CFLAGS) -c display.cpp -o display.o
+	$(CC) $(MSAN_CFLAGS) -c engine.cpp -o engine.o
+	$(CC) $(MSAN_CFLAGS) -c window.cpp -o window.o
+	$(CC) $(MSAN_CFLAGS) -c menuItem.cpp -o menuItem.o
+	$(CC) $(MSAN_CFLAGS) -c test.cpp -o test.o
+	$(CC) $(MSAN_CFLAGS) -o reader-msan $(OBJECTS) $(MSAN_LDLIBS)
 
 # Object file rules
 main.o: main.cpp parse.h
@@ -57,6 +70,9 @@ window.o: window.cpp window.h
 
 menuItem.o: menuItem.cpp menuItem.h
 	$(CC) $(CFLAGS) -c menuItem.cpp
+
+test.o: test.cpp test.h
+	$(CC) $(CFLAGS) -c test.cpp
 
 # Testing targets
 test-leaks: asan
@@ -91,6 +107,9 @@ profile-memory: reader
 
 # Clean targets
 clean:
+	rm -f reader reader-asan reader-msan *.o
+
+clean-debug: 
 	rm -f reader reader-asan reader-msan *.o
 
 clean-all: clean

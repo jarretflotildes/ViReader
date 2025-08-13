@@ -150,6 +150,14 @@ void WindowManager::setFontSize(int size){
 }
 
 void WindowManager::shutdown_Window(){
-    SDL_DestroyWindow(sdlWindow);
-    TTF_CloseFont(textSettings.font);
+    if(sdlWindow != NULL) {
+        SDL_DestroyWindow(sdlWindow);
+        sdlWindow = NULL;
+    }
+    if(textSettings.font != NULL) {
+        TTF_CloseFont(textSettings.font);
+        textSettings.font = NULL;
+    }
+    TTF_Quit();
+    SDL_Quit();
 }

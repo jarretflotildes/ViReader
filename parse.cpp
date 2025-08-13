@@ -94,7 +94,7 @@ cout << NUM_LINES << endl;
          NUM_LINES = 1;
       }
    } else {
-      printf("error loading text file\n");
+      printf("parse: error loading text file\n");
       exit(-1);
    }
 

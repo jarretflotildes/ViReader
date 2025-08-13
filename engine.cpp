@@ -34,7 +34,6 @@ void engine_driver(WindowManager *window){
 
    SDL_Event winEvent;
    bool running = true;
-
 //   console Console = display_getConsole();
    /*
       typedef struct{
@@ -53,8 +52,6 @@ void engine_driver(WindowManager *window){
          SDL_Surface  *surface;
       } screen;
    */
-
-   vector<SDL_Surface*> textSurfaces = display_getSurfaceText();
 
    //Draw Text
    SDL_CreateTexture(Screen.renderer, SDL_PIXELFORMAT_RGBA8888, SDL_TEXTUREACCESS_STREAMING,window->getWidth(),window->getHeight());

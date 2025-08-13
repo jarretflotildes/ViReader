@@ -32,28 +32,32 @@ using std::endl;
 #define DIRLEFT 0
 #define DIRRIGHT 1
 
-screen Screen;
 /* typedef struct{
    SDL_Renderer *renderer;
    SDL_Texture  *text;
    SDL_Surface  *surface;
 } screen;
 */
+screen Screen;
 
-console Console;
 /* typedef struct{
    SDL_Surface *surfaceConsole;
    SDL_Texture *textureMessage;
    SDL_Rect consoleRect; //rect where text displayed
 } console;
 */
+console Console;
 
+/*
+typedef struct{
+   SDL_Texture *currentPage;
+   SDL_Texture *maxPage;
+   SDL_Surface *settings;
+}*/
 mainScreen_elements MainElements;
 
 SDL_Texture *Background;
 SDL_Rect *TempRectBackground; //Background to display if no background loaded from img
-
-vector<SDL_Surface*> TextSurfaces;
 
 int CurrentScreen;
 
@@ -130,21 +134,6 @@ void initialize_menuItems(WindowManager *window){
 //   SDL_Surface *surface = TTF_RenderText_Solid(window->getTextSettings().font,max.c_str(),(SDL_Color){255,255,255});
    MainElements.currentPage = SDL_CreateTextureFromSurface(Screen.renderer,surface);
    SDL_FreeSurface(surface);
-}
-
-void initialize_SurfaceText(WindowManager *window){
-    text Text = window->getTextSettings();
-
-    for(int i = 0;i<parse_getNumLines();i++){
-       string line = parse_getText().at(i);
-       if(line.empty()) {
-            line = " ";
-       }
-       SDL_Surface *currentSurface = TTF_RenderUTF8_Blended(Text.font,line.c_str(),(SDL_Color){0,0,0}); //wraps text around
-//       SDL_Surface *currentSurface = TTF_RenderText_Blended(Text.font,line.c_str(),(SDL_Color){0,0,0}); //wraps text around
-//       SDL_Surface *currentSurface = TTF_RenderText_Solid(Text.font,line.c_str(),(SDL_Color){0,0,0});
-       TextSurfaces.push_back(currentSurface);
-    }
 }
 
 SDL_Surface *display_createTextSurface(WindowManager *window,int page){
@@ -272,7 +261,6 @@ void display_MainScreen_ScrollTextForward(WindowManager *window){
     string max = std::to_string(parse_getCurrentPage()) +  " / " + std::to_string(parse_getPages());
     SDL_Surface *surface = TTF_RenderText_Blended(window->getTextSettings().font,max.c_str(),(SDL_Color){255,255,255});
     MainElements.currentPage = SDL_CreateTextureFromSurface(Screen.renderer,surface);
-
     SDL_RenderClear(Screen.renderer);
     SDL_DestroyTexture(Screen.text);
     display_RenderBackground();
@@ -280,6 +268,8 @@ void display_MainScreen_ScrollTextForward(WindowManager *window){
     display_RenderConsole(window);
     display_MainScreen_RenderText(window);
     SDL_RenderPresent(Screen.renderer);
+    //Free
+    SDL_FreeSurface(surface); 
 }
 
 void display_MainScreen_ScrollTextBackward(WindowManager *window){
@@ -296,6 +286,8 @@ void display_MainScreen_ScrollTextBackward(WindowManager *window){
 
     display_MainScreen_RenderText(window);
     SDL_RenderPresent(Screen.renderer);
+    //Free
+    SDL_FreeSurface(surface); 
 }
 
 screen display_getScreen(){
@@ -310,31 +302,38 @@ SDL_Texture *display_getBackground(){
    return Background;
 }
 
-vector<SDL_Surface*> display_getSurfaceText(){
-    return TextSurfaces;
-}
-
 int display_getCurrentScreenIndex(){
    return CurrentScreen;
 }
 
-
 void display_shutdown(WindowManager *window){
    //Screen
-   SDL_DestroyRenderer(Screen.renderer);
+   if(Screen.renderer){
+      SDL_DestroyRenderer(Screen.renderer);
+   }
+   if(Screen.text){
+      SDL_DestroyTexture(Screen.text);
+   }
+   if(Screen.text){
+      SDL_FreeSurface(Screen.surface);
+   }
+
+   //Background
+   if(Background){
+      SDL_DestroyTexture(Background);
+   }
 
    //Console
-   SDL_FreeSurface(Console.surfaceConsole);
-   SDL_DestroyTexture(Console.textureMessage);
+   if(Console.surfaceConsole){
+      SDL_FreeSurface(Console.surfaceConsole);
+   }
+
+   if(Console.textureMessage){
+      SDL_DestroyTexture(Console.textureMessage);
+   }
 
    //MainScreen Menu
-   SDL_DestroyTexture(MainElements.currentPage);
-
-   //Text
-//   for(int i = 0;i<parse_getNumLines();i++){
-//        SDL_FreeSurface(TextSurfaces.at(i));
-//   }
-   //Font
-   TTF_Quit();
-   SDL_Quit();
+   if(MainElements.currentPage){
+      SDL_DestroyTexture(MainElements.currentPage);
+   }
 }

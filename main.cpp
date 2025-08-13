@@ -6,6 +6,7 @@
 #include "display.h"
 #include "engine.h"
 #include "window.h"
+#include "test.h"
 
 #include <chrono> //For testing speeds of algorithms
 
@@ -16,41 +17,24 @@
 using std::cout;
 using std::endl;
 
-void test_parse(char *argv[]){
-    using std::chrono::high_resolution_clock;
-    using std::chrono::duration_cast;
-    using std::chrono::duration;
-    using std::chrono::milliseconds;
-
-    auto t1 = high_resolution_clock::now();
-
-    int textCharacterLimit = 50;
-    int displayLines = 10;
-
-    initialize_parse(argv[1],textCharacterLimit,displayLines);
-    print_file();
-
-    auto t2 = high_resolution_clock::now();
-
-    // Getting number of milliseconds as an integer.
-    auto ms_int = duration_cast<milliseconds>(t2 - t1);
-
-    // Getting number of milliseconds as a double. 
-    duration<double, std::milli> ms_double = t2 - t1;
-
-    std::cout << std::endl << "IT TOOK " << ms_int.count() << "M/S TO COMPLETE\n";
-
-}
 
 void driver(char *argv[]){
     WindowManager window = WindowManager(0);
     initialize_parse(argv[1],window.getTextLimit(),window.getDisplayLines());
 
-    initialize_display(&window);
+//    initialize_display(&window);
    // window.currentText = display_createTextSurface(&window,1);
-    engine_driver(&window); 
+//    engine_driver(&window); 
     window.shutdown_Window();
     display_shutdown(&window);
+}
+
+void test(char *argv[]){
+    test_basic_sdl();
+    //test_parse(argv);
+    //test_display_init();
+    //test_display_scrollForward(argv);
+    //test_window();
 }
 
 int main(int args, char *argv[]){
@@ -59,8 +43,8 @@ int main(int args, char *argv[]){
         return -1;
     }
     cout << "STARTING PROGRAM..." << endl;
-    driver(argv);
-//    test_parse(argv);
+//    driver(argv);
+    test(argv);
     cout << "SHUTTING DOWN..." << endl;
     return EXIT_SUCCESS;
 
