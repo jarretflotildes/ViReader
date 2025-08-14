@@ -17,10 +17,12 @@ string cutLine_Case2(string line, string firstHalf, string secondHalf, string fi
 
 string getFirstWord(string line);
 string getLastWord(string line);
-size_t getLastWordBoundary(const string &str, size_t max_chars);
+size_t getLastWordBoundary(const string &str, size_t characterLimit);
+
 //UTF Helpers
 size_t utf8_length(const string &str);
 string utf8_substr(const string& str, size_t start, size_t length = string::npos);
+bool containsCJKChars(const string &str);
 
 
 int parse_getNumLines();

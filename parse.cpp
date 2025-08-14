@@ -127,6 +127,9 @@ void format_text() {
 string parse_CutLine(int i) {
     string line = TXT_FILE.at(i);
     int characterLimit = CharacterLimit;
+    if(containsCJKChars(line)){
+        characterLimit *= 0.49;
+    }
     
     char *buffer = (char*)line.c_str();
     buffer[strcspn(line.c_str(), "\r\n")] = 0;
@@ -269,8 +272,8 @@ string utf8_substr(const string& str, size_t start, size_t length) {
 }
 
 // Find last complete word boundary before character limit
-size_t getLastWordBoundary(const string& str, size_t max_chars) {
-    if (utf8_length(str) <= max_chars) {
+size_t getLastWordBoundary(const string &str, size_t characterLimit) {
+    if (utf8_length(str) <= characterLimit) {
         return utf8_length(str);
     }
     
@@ -279,7 +282,7 @@ size_t getLastWordBoundary(const string& str, size_t max_chars) {
     size_t last_space_char = 0;
     bool found_space = false;
     
-    for (size_t i = 0; i < str.size() && char_count < max_chars; ) {
+    for (size_t i = 0; i < str.size() && char_count < characterLimit; ) {
         unsigned char c = str[i];
         
         if (c == ' ') {
@@ -301,8 +304,47 @@ size_t getLastWordBoundary(const string& str, size_t max_chars) {
         }
         char_count++;
     }
-    
-    return found_space ? last_space_char + 1 : max_chars;
+    return found_space ? last_space_char + 1 :characterLimit;
+}
+
+
+// Check if string contains CJK characters
+bool containsCJKChars(const string &str) {
+    for (size_t i = 0; i < str.size(); ) {
+        unsigned char c = str[i];
+        
+        if (c < 0x80) {
+            // ASCII character
+            i += 1;
+        } else if ((c & 0xE0) == 0xC0) {
+            // 2-byte character - skip for now
+            i += 2;
+        } else if ((c & 0xF0) == 0xE0) {
+            // 3-byte character - this is where most CJK characters are
+            unsigned char c1 = (i + 1 < str.size()) ? str[i + 1] : 0;
+            //unsigned char c2 = (i + 2 < str.size()) ? str[i + 2] : 0;
+            
+            // Check for common Japanese/CJK Unicode ranges
+            // Hiragana: U+3040-U+309F
+            // Katakana: U+30A0-U+30FF  
+            // CJK Unified Ideographs: U+4E00-U+9FFF
+            // CJK Symbols: U+3000-U+303F
+            if ((c == 0xE3 && c1 >= 0x80 && c1 <= 0xBF) ||  // U+3000-U+3FFF range
+                (c >= 0xE4 && c <= 0xE9) ||                   // U+4000-U+9FFF range
+                (c == 0xEF && c1 == 0xBC) ||                  // Full-width characters
+                (c == 0xEF && c1 == 0xBD)) {                  // More full-width characters
+                return true;
+            }
+            i += 3;
+        } else if ((c & 0xF8) == 0xF0) {
+            // 4-byte character
+            i += 4;
+        } else {
+            // Invalid UTF-8, treat as single byte
+            i += 1;
+        }
+    }
+    return false;
 }
 
 
