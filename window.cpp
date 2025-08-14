@@ -125,7 +125,7 @@ void WindowManager::setCurrentScaleMode(int mode){
         case 0: 
             width = 1200;
             height = 720;
-            textCharacterLimit = 50;
+            textCharacterLimit = 52;
             textHeightOffset = 60;
             displayLines = 10;
             textSettings.fontSize = 40;
@@ -134,7 +134,7 @@ void WindowManager::setCurrentScaleMode(int mode){
         default:
             width = 1200;
             height = 720;
-            textCharacterLimit = 50;
+            textCharacterLimit = 52;
             textHeightOffset = 60;
             displayLines = 10;
             textSettings.fontSize = 40;

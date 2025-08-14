@@ -18,7 +18,7 @@ using std::cout;
 using std::endl;
 
 //One line to change between prod and testing
-#define TESTING 1
+#define TESTING 0
 
 void driver(char *argv[]){
     WindowManager window = WindowManager(0);
